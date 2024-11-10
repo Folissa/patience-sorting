@@ -2,7 +2,7 @@ typedef struct sensible_heat {
     double mass;
     double specific_heat_capacity;
     double temperature_change;
-} sensible_heat;
+} record_t;
 
 #define RECORD_SIZE sizeof(sensible_heat)
 #define RECORD_COUNT 4

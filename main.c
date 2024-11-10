@@ -7,8 +7,9 @@
 // TODO: File contents should be printed in the beginning and in the end
 // TODO: File contents should be printed after each sorting phase
 
-// TODO: Records should be generated randomly and as an input from the keyboard
-// TODO: Test numbers should be available to load from a file [IN PROGRESS]
+// TODO: Records should be generated randomly
+// TODO: Records should be able to be inputted from the keyboard
+// TODO: Test numbers should be available to load from a file [DONE]
 
 
 void create_file(const char *filename) {
@@ -34,10 +35,10 @@ void close_file(FILE *file) {
 }
 
 
-void append_record(char *filename, sensible_heat heat) {
+void append_record(char *filename, record_t heat) {
     FILE *file = open_file(filename, "ab");
 
-    size_t result = fwrite(&heat, sizeof(struct sensible_heat), 1, file);
+    size_t result = fwrite(&heat, sizeof(record_t), 1, file);
     if (result != 1) {
         perror("Error writing to file");
     }
@@ -46,8 +47,8 @@ void append_record(char *filename, sensible_heat heat) {
 }
 
 
-sensible_heat *read_record(char *filename, int offset) {
-    sensible_heat *heat = (sensible_heat *)malloc(sizeof(sensible_heat));
+record_t *read_record(char *filename, int offset) {
+    record_t *heat = (record_t *)malloc(sizeof(record_t));
 
     FILE *file = open_file(filename, "rb");
 
@@ -58,7 +59,7 @@ sensible_heat *read_record(char *filename, int offset) {
         return NULL;
     }
 
-    size_t result = fread(heat, sizeof(struct sensible_heat), 1, file);
+    size_t result = fread(heat, sizeof(record_t), 1, file);
     if (result != 1)
         perror("Error reading from file");
 
@@ -89,7 +90,7 @@ void deserialize_page(FILE *file) {
 }
 
 
-double calculate_sensible_heat(sensible_heat heat) {
+double calculate_sensible_heat(record_t heat) {
     double result;
 
     result = heat.mass * heat.specific_heat_capacity * heat.temperature_change;
@@ -98,7 +99,7 @@ double calculate_sensible_heat(sensible_heat heat) {
 }
 
 
-void print_debug(sensible_heat record) {
+void print_debug(record_t record) {
     printf("---\n");
     printf("DEBUG: Mass: %.2lf\n", record.mass);
     printf("DEBUG: Specific heat capacity: %.2lf\n", record.specific_heat_capacity);
@@ -107,7 +108,7 @@ void print_debug(sensible_heat record) {
 }
 
 
-void load_test_from_file(char *filename, sensible_heat *records, int *record_count) {
+void load_records_from_file(char *filename, record_t *records, int *record_count) {
     FILE *file = open_file(filename, "r");
 
     *record_count = 0;
@@ -122,7 +123,12 @@ void load_test_from_file(char *filename, sensible_heat *records, int *record_cou
 }
 
 
-void load_test_from_keyboard() {
+void load_records_from_keyboard() {
+    // TODO: Implement
+}
+
+
+void load_records_generated_randomly() {
     // TODO: Implement
 }
 
@@ -130,26 +136,32 @@ void load_test_from_keyboard() {
 void print_menu() {
     printf("1. Load test input from file\n");
     printf("2. Load test input from keyboard\n");
-    printf("3. Exit\n");
+    printf("3. Load test input generated randomly\n");
+    printf("4. Exit\n");
 }
 
-void prompt_for_test_type(sensible_heat *records, int *record_count) {
+void prompt_for_records(record_t *records, int *record_count) {
     int exit = 0;
     int choice;
 
     while (!exit) {
         print_menu();
+        printf("> ");
         scanf("%d", &choice);
         switch(choice) {
             case 1:
-                load_test_from_file(TEST_FILE, records, record_count);
+                load_records_from_file(TEST_FILE, records, record_count);
                 exit = 1;
                 break;
             case 2:
-                load_test_from_keyboard();
+                load_records_from_keyboard();
                 exit = 1;
                 break;
             case 3:
+                load_records_generated_randomly();
+                exit = 1;
+                break;
+            case 4:
                 exit = 1;
                 break;
             default:
@@ -159,8 +171,8 @@ void prompt_for_test_type(sensible_heat *records, int *record_count) {
     };
 } 
 
-sensible_heat *create_records() {
-    sensible_heat *records = (sensible_heat *)malloc(sizeof(sensible_heat) * MAX_RECORD_COUNT);
+record_t *create_records() {
+    record_t *records = (record_t *)malloc(sizeof(record_t) * MAX_RECORD_COUNT);
     if (records == NULL) {
         perror("Failed to allocate memory for records");
         return NULL;
@@ -168,49 +180,31 @@ sensible_heat *create_records() {
     return records;
 }
 
-void destroy_records(sensible_heat *records) {
+void destroy_records(record_t *records) {
     free(records);
 }
 
 int main() {
-    // sensible_heat heat_1, heat_2;
+    char *tape_1 = "tape-1.txt";
+    char *tape_2 = "tape-2.txt";
+    char *tape_3 = "tape-3.txt";
 
-    // heat_1.mass = 1.20;
-    // heat_1.specific_heat_capacity = 2;
-    // heat_1.temperature_change = 5;
-
-    // heat_2.mass = 3;
-    // heat_2.specific_heat_capacity = 2;
-    // heat_2.temperature_change = -1;
-
-    // char *tape_1 = "tape-1.txt";
-    // char *tape_2 = "tape-2.txt";
-    // char *tape_3 = "tape-3.txt";
-
-    // delete_file(tape_1);
-    // create_file(tape_1);
-
-    // append_record(tape_1, heat_1);
-    // append_record(tape_1, heat_2);
-
-    // int records_number = 2;
-
-    // for (int i = 0; i < records_number; i++) {
-    //     sensible_heat *heat = read_record(tape_1, sizeof(struct sensible_heat) * i);
-    //     printf("DEBUG: Mass: %.2f\n", heat->mass);
-    //     printf("DEBUG: Specific heat capacity: %.2f\n", heat->specific_heat_capacity);
-    //     printf("DEBUG: Temperature change: %.2f\n", heat->temperature_change);
-    //     printf("DEBUG: Calcualted sensible heat: %.2f\n", calculate_sensible_heat(heat));
-    //     free(heat);
-    // }
     int record_count = 0;
-    sensible_heat *records;
+    record_t *records;
     
     records = create_records();
 
-    prompt_for_test_type(records, &record_count);
+    prompt_for_records(records, &record_count);
+
+    delete_file(tape_1);
+    create_file(tape_1);
+    clear_file(tape_1);
+
+    append_record(tape_1, records[0]);
+    record_t *record = read_record(tape_1, sizeof(record) * 0);
+
+    print_debug(*record);
 
     destroy_records(records);
     return 0;
 }
-
