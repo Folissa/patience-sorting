@@ -11,14 +11,14 @@ void close_file(FILE *file);
 
 void append_to_file(char *filename, sensible_heat heat);
 
-void read_from_file(char *filename, int offset);
+sensible_heat *read_from_file(char *filename, int offset);
 
 void clear_file(char *filename);
 
 void delete_file(char *filename);
 
-void serialize(FILE *file);
+void serialize_page(FILE *file);
 
-void deserialize(FILE *file);
+void deserialize_page(FILE *file);
 
-int calculate_sensible_heat(sensible_heat heat);
+int calculate_sensible_heat(sensible_heat *heat);
