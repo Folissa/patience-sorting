@@ -7,10 +7,11 @@
 // TODO: File contents should be printed in the beginning and in the end
 // TODO: File contents should be printed after each sorting phase
 
-// TODO: Records should be generated randomly
+// TODO: Records should be generated randomly [DONE]
 // TODO: Records should be able to be inputted from the keyboard
 // TODO: Test numbers should be available to load from a file [DONE]
 
+// TODO: (Optional) Prevent user from giving negative numbers
 
 void create_file(const char *filename) {
     FILE *file = fopen(filename, "w");
@@ -90,10 +91,10 @@ void deserialize_page(FILE *file) {
 }
 
 
-double calculate_sensible_heat(record_t heat) {
+double calculate_sensible_heat(record_t record) {
     double result;
 
-    result = heat.mass * heat.specific_heat_capacity * heat.temperature_change;
+    result = record.mass * record.specific_heat_capacity * record.temperature_change;
 
     return result;
 }
@@ -101,9 +102,9 @@ double calculate_sensible_heat(record_t heat) {
 
 void print_debug(record_t record) {
     printf("---\n");
-    printf("DEBUG: Mass: %.2lf\n", record.mass);
-    printf("DEBUG: Specific heat capacity: %.2lf\n", record.specific_heat_capacity);
-    printf("DEBUG: Temperature change: %.2lf\n", record.temperature_change);
+    printf("DEBUG: Mass: %.4lf\n", record.mass);
+    printf("DEBUG: Specific heat capacity: %.4lf\n", record.specific_heat_capacity);
+    printf("DEBUG: Temperature change: %.4lf\n", record.temperature_change);
     printf("DEBUG: Calculated sensible heat: %.4lf\n", calculate_sensible_heat(record));
 }
 
@@ -127,9 +128,29 @@ void load_records_from_keyboard() {
     // TODO: Implement
 }
 
+record_t *generate_records(record_t *records, int records_count) {
+    srand(time(NULL));
+    
+    for (int i = 0; i < records_count; i++) {
+        record_t record;
+        // Mass between 0 and 1000 with precision
+        record.mass = (rand() % 1001) + ((rand() % 1000) / 1000.0);
+        // Specific heat capacity between 1000 and 10000 with precision
+        record.specific_heat_capacity = (rand() % 9001 + 1000) + ((rand() % 1000) / 1000.0); 
+         // Temperature change between -50 and 50 with precision
+        record.temperature_change = (rand() % 101) - 50 + ((rand() % 1000) / 1000.0);
+        print_debug(record);
+        records[i] = record;
+    }
 
-void load_records_generated_randomly() {
-    // TODO: Implement
+    return records;
+}
+
+record_t *load_records_generated_randomly(record_t *records, int *records_count) {
+    printf("Input number of records to generate:\n");
+    printf("> ");
+    scanf("%d", records_count);
+    return generate_records(records, *records_count);
 }
 
 
@@ -158,7 +179,7 @@ void prompt_for_records(record_t *records, int *record_count) {
                 exit = 1;
                 break;
             case 3:
-                load_records_generated_randomly();
+                load_records_generated_randomly(records, record_count);
                 exit = 1;
                 break;
             case 4:
@@ -206,5 +227,6 @@ int main() {
     print_debug(*record);
 
     destroy_records(records);
+    free(record);
     return 0;
 }
