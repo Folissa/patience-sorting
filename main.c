@@ -1,7 +1,4 @@
-#include <stdio.h>
-#include <stdlib.h>
-
-#include "constants.h"
+#include "main.h"
 
 
 void create_file(const char *filename) {
@@ -12,10 +9,10 @@ void create_file(const char *filename) {
 }
 
 
-FILE *open_file(const char *filename) {
-    FILE *file = fopen(filename, "r+b");
-    if (!file) {
-        perror("Error opening the file");
+FILE *open_file(char *filename, char *mode) {
+    FILE *file = fopen(filename, mode);
+    if (file == NULL) {
+        perror("Error opening file");
         return NULL;
     }
     return file;
@@ -27,18 +24,45 @@ void close_file(FILE *file) {
 }
 
 
-void write_ints_to_file(FILE *file, int number) {
-    // TODO: Implement
+void append_to_file(char *filename, sensible_heat heat) {
+    FILE *file = open_file(filename, "ab");
+
+    size_t result = fwrite(&heat, sizeof(struct sensible_heat), 1, file);
+    if (result != 1) {
+        perror("Error writing to file");
+    }
+
+    fclose(file);}
+
+
+void read_from_file(char *filename, int offset) {
+    sensible_heat heat;
+
+    FILE *file = open_file(filename, "rb");
+
+
+    int seek_result = fseek(file, offset, SEEK_SET);
+    if (seek_result != 0) {
+        perror("Error seeking to position");
+        fclose(file);
+        return;
+    }
+
+    size_t result = fread(&heat, sizeof(struct sensible_heat), 1, file);
+    if (result != 1) {
+        perror("Error reading from file");
+    } else {
+        printf("Mass: %d\n", heat.mass);
+        printf("Specific heat capacity: %d\n", heat.specific_heat_capacity);
+        printf("Temperature change: %d\n", heat.temperature_change);
+    }
+    fclose(file);
 }
 
 
-void read_ints_from_file(FILE *file) {
-    // TODO: Implement
-}
-
-
-void clear_file() {
-    // TODO: Implement
+void clear_file(char *filename) {
+    FILE *file = open_file(filename, "w");
+    fclose(file);
 }
 
 
@@ -68,16 +92,29 @@ int calculate_sensible_heat(sensible_heat heat) {
 
 
 int main() {
-    sensible_heat heat;
+    sensible_heat heat_1, heat_2;
 
-    char *my_filename = "file.txt";
+    heat_1.mass = 1;
+    heat_1.specific_heat_capacity = 2;
+    heat_1.temperature_change = 3;
+
+    heat_2.mass = 3;
+    heat_2.specific_heat_capacity = 2;
+    heat_2.temperature_change = 1;
+
     char *tape_1 = "tape-1.txt";
     char *tape_2 = "tape-2.txt";
     char *tape_3 = "tape-3.txt";
 
-    create_file(my_filename);
-    FILE *file = open_file(my_filename);
-    close_file(file);
+    delete_file(tape_1);
+    create_file(tape_1);
+
+    append_to_file(tape_1, heat_1);
+    append_to_file(tape_1, heat_2);
+
+    read_from_file(tape_1, sizeof(struct sensible_heat) * 0);
+    read_from_file(tape_1, sizeof(struct sensible_heat) * 1);
+
 
     return 0;
 }
