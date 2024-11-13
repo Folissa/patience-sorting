@@ -29,6 +29,11 @@ FILE *open_file(char *filename, char *mode) {
 }
 
 
+void close_file(FILE *file) {
+    fclose(file);
+}
+
+
 int check_file_existence(char *filename) {
     FILE *file = fopen(filename, "r");
     if (file) {
@@ -37,11 +42,6 @@ int check_file_existence(char *filename) {
     } else {
         return 0;
     }
-}
-
-
-void close_file(FILE *file) {
-    fclose(file);
 }
 
 
@@ -182,15 +182,6 @@ void print_prompt() {
 }
 
 
-void load_records_from_file(char *filename, int *record_count) {
-    init_file(TAPE_1);
-
-    *record_count = count_records(filename);
-
-    copy_file(filename, TAPE_1);
-}
-
-
 void input_records(int records_count) {
     init_file(TAPE_1);
 
@@ -211,15 +202,6 @@ void input_records(int records_count) {
         append_record(TAPE_1, record);
         destroy_record(record);
     }
-}
-
-
-void load_records_from_keyboard(int *records_count) {
-    printf("Input number of records you will be inputting:\n");
-    print_prompt();
-    scanf("%d", records_count);
-    printf("Input records, one per line, and the values in the following order: mass specific_heat_capacity temperature_change\n");
-    input_records(*records_count);
 }
 
 
@@ -247,6 +229,24 @@ void randomize_records(int records_count) {
         append_record(TAPE_1, record);
         destroy_record(record);
     }
+}
+
+
+void load_records_from_file(char *filename, int *record_count) {
+    init_file(TAPE_1);
+
+    *record_count = count_records(filename);
+
+    copy_file(filename, TAPE_1);
+}
+
+
+void load_records_from_keyboard(int *records_count) {
+    printf("Input number of records you will be inputting:\n");
+    print_prompt();
+    scanf("%d", records_count);
+    printf("Input records, one per line, and the values in the following order: mass specific_heat_capacity temperature_change\n");
+    input_records(*records_count);
 }
 
 
