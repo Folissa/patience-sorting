@@ -9,4 +9,4 @@ typedef struct sensible_heat {
 #define PAGE_SIZE RECORD_COUNT * RECORD_SIZE
 
 #define MAX_RECORD_COUNT 1000
-#define TEST_FILE "tape-1-test.txt"
+#define TEST_FILE "input.txt"
