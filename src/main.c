@@ -100,11 +100,34 @@ void delete_file(char *filename) {
 }
 
 
-// void copy_file(char *filename_source, char *filename_destination) {
-//     FILE *file_source = open_file(file_source, "r");
-//     FILE *file_destination = open_file(filename_destination, "wb");
+int count_records(char *filename) {
+    FILE *file = open_file(filename, "r");
 
-// }
+    int records_count = 0;
+    double record_value_1, record_value_2, record_value_3; 
+    
+    while (fscanf(file, "%lf %lf %lf", &record_value_1, &record_value_2, &record_value_3) == 3) {
+        records_count++;
+    }
+
+    fclose(file);
+    return records_count; 
+}
+
+
+void copy_file(char *source_filename, char *destination_filename) {
+    FILE *source_file = open_file(source_filename, "r");
+    FILE *destination_file = open_file(destination_filename, "w");
+    
+    char character;
+
+    while ((character = fgetc(source_file)) != EOF) {
+        fputc(character, destination_file);
+    }
+
+    close_file(source_file);
+    close_file(destination_file);
+}
 
 
 void serialize_page(FILE *file) {
@@ -135,19 +158,10 @@ void print_debug(record_t record) {
 }
 
 
-// void load_records_from_file(char *filename, int *record_count) {
-//     FILE *file = open_file(filename, "r");
-
-//     *record_count = 0;
-//     while (*record_count < MAX_RECORD_COUNT && fscanf(file, "%lf %lf %lf",
-//                                         &records[*record_count].mass,
-//                                         &records[*record_count].specific_heat_capacity,
-//                                         &records[*record_count].temperature_change) == 3) {
-//         (*record_count)++;
-//     }
-
-//     close_file(file);
-// }
+void load_records_from_file(char *filename, int *record_count) {
+    *record_count = count_records(filename);
+    copy_file(filename, TAPE_1);
+}
 
 
 void load_records_from_keyboard() {
@@ -171,22 +185,22 @@ record_t *randomize_record() {
 }
 
 
-void randomize_records(char *filename, int records_count) {
-    clear_file(filename);
+void randomize_records(int records_count) {
+    clear_file(TAPE_1);
 
     for (int i = 0; i < records_count; i++) {
         record_t *record = randomize_record();
-        append_record(filename, record);
+        append_record(TAPE_1, record);
         destroy_record(record);
     }
 }
 
 
-record_t *load_records_generated_randomly(char *filename, int *records_count) {
+record_t *load_records_generated_randomly(int *records_count) {
     printf("Input number of records to generate:\n");
     printf("> ");
     scanf("%d", records_count);
-    randomize_records(filename, *records_count);
+    randomize_records(*records_count);
 }
 
 
@@ -198,7 +212,7 @@ void print_menu() {
 }
 
 
-void prompt_for_records(char *main_tape_filename, int *records_count) {
+void prompt_for_records(int *records_count) {
     int exit = 0;
     int choice;
 
@@ -208,7 +222,7 @@ void prompt_for_records(char *main_tape_filename, int *records_count) {
         scanf("%d", &choice);
         switch(choice) {
             case 1:
-                load_records_from_file(TEST_FILE, records_count);
+                load_records_from_file(INPUT_FILE, records_count);
                 exit = 1;
                 break;
             case 2:
@@ -216,7 +230,7 @@ void prompt_for_records(char *main_tape_filename, int *records_count) {
                 exit = 1;
                 break;
             case 3:
-                load_records_generated_randomly(main_tape_filename, records_count);
+                load_records_generated_randomly(records_count);
                 exit = 1;
                 break;
             case 4:
@@ -233,13 +247,9 @@ void prompt_for_records(char *main_tape_filename, int *records_count) {
 int main() {
     srand(time(NULL));
 
-    char *tape_1_filename = "tape-1.txt";
-    char *tape_2_filename = "tape-2.txt";
-    char *tape_3_filename = "tape-3.txt";
-
     int records_count = 0;
 
-    prompt_for_records(tape_1_filename, &records_count);
+    prompt_for_records(&records_count);
 
     return 0;
 }
