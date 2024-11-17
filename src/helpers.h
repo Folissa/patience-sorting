@@ -1,6 +1,6 @@
 #pragma once
 
-#include <time.h>
+#include <stdlib.h>
 
 #include "constants.h"
 #include "records.h"

@@ -3,10 +3,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "file.h"
 #include "constants.h"
+#include "file.h"
+#include "records.h"
 
-// Create new record. 
+// Create new record.
 record_t *create_record();
 
 // Destroy a record.
