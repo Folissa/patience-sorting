@@ -1,4 +1,7 @@
-#include "main.h"
+#include <stdlib.h>
+#include <time.h>
+
+#include "input.h"
 
 // TODO: Sorting by heat, tapes should be implemented using files
 // TODO: Write and read one record to and from file [DONE]
@@ -12,6 +15,7 @@
 // TODO: Test numbers should be available to load from a file [DONE]
 
 #ifdef DEBUG
+// Print debug information about the record.
 void print_debug(record_t record) {
     printf("---\n");
     printf("DEBUG: Mass: %.2lf\n", record.mass);
