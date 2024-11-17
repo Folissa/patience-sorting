@@ -1,0 +1,5 @@
+CMakeLists.txt
+.vscode
+build/*
+tape-1.txt
+

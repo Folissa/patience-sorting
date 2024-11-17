@@ -21,7 +21,6 @@ void print_debug(record_t record) {
 }
 #endif
 
-
 int main() {
     srand(time(NULL));
 

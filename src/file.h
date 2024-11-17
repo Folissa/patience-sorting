@@ -9,7 +9,7 @@ void create_file(const char *filename);
 FILE *open_file(char *filename, char *mode);
 
 //  Close a file.
-void close_file(FILE *file); 
+void close_file(FILE *file);
 
 // Check if file exists.
 int check_file_existence(char *filename);

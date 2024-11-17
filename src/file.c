@@ -7,7 +7,6 @@ void create_file(const char *filename) {
     }
 }
 
-
 FILE *open_file(char *filename, char *mode) {
     FILE *file = fopen(filename, mode);
     if (file == NULL) {
@@ -17,11 +16,9 @@ FILE *open_file(char *filename, char *mode) {
     return file;
 }
 
-
 void close_file(FILE *file) {
     fclose(file);
 }
-
 
 int check_file_existence(char *filename) {
     FILE *file = fopen(filename, "r");
@@ -33,12 +30,10 @@ int check_file_existence(char *filename) {
     }
 }
 
-
 void clear_file(char *filename) {
     FILE *file = open_file(filename, "w");
     close_file(file);
 }
-
 
 void init_file(char *filename) {
     if (check_file_existence(filename)) {
@@ -48,17 +43,15 @@ void init_file(char *filename) {
     }
 }
 
-
 void delete_file(char *filename) {
     if (remove(filename) != 0)
         perror("Error deleting the file");
 }
 
-
 void copy_file(char *source_filename, char *destination_filename) {
     FILE *source_file = open_file(source_filename, "r");
     FILE *destination_file = open_file(destination_filename, "w");
-    
+
     char character;
 
     while ((character = fgetc(source_file)) != EOF) {
@@ -68,4 +61,3 @@ void copy_file(char *source_filename, char *destination_filename) {
     close_file(source_file);
     close_file(destination_file);
 }
-
