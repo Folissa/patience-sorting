@@ -4,44 +4,42 @@ void print_prompt() {
     printf("> ");
 }
 
-void input_records(int records_count) {
-    init_file(TAPE_1);
+void clear_input_buffer() {
+    while (getchar() != '\n');
+}
 
-    for (int i = 0; i < records_count; i++) {
+void input_records(int records_count) {
+    init_file(TAPE_1_FILENAME);
+    int records_counter = 0;
+
+    while (records_counter != records_count) {
         record_t *record = create_record();
         double mass, specific_heat_capacity, temperature_change;
 
         print_prompt();
+
         if (scanf("%lf %lf %lf", &mass, &specific_heat_capacity, &temperature_change) == 3) {
             record->mass = mass;
             record->specific_heat_capacity = specific_heat_capacity;
             record->temperature_change = temperature_change;
+            records_counter++;
         } else {
-            printf("Invalid input. Please enter three floating point numbers separated by spaces.\n");
+            printf("Invalid input. Please enter three floating point numbers.\n");
+            clear_input_buffer();
             continue;
         }
 
-        append_record(TAPE_1, record);
+        append_record(TAPE_1_FILENAME, record);
         destroy_record(record);
-    }
-}
-
-void randomize_records(int records_count) {
-    init_file(TAPE_1);
-
-    for (int i = 0; i < records_count; i++) {
-        record_t *record = randomize_record();
-        append_record(TAPE_1, record);
-        destroy_record(record);
-    }
+    };
 }
 
 void load_records_from_file(char *filename, int *record_count) {
-    init_file(TAPE_1);
+    init_file(TAPE_1_FILENAME);
 
     *record_count = count_records(filename);
 
-    copy_file(filename, TAPE_1);
+    copy_file(filename, TAPE_1_FILENAME);
 }
 
 void load_records_from_keyboard(int *records_count) {
@@ -76,7 +74,7 @@ void prompt_for_records(int *records_count) {
         scanf("%d", &choice);
         switch (choice) {
         case 1:
-            load_records_from_file(INPUT_FILE, records_count);
+            load_records_from_file(INPUT_FILENAME, records_count);
             exit = 1;
             break;
         case 2:

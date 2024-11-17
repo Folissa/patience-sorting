@@ -10,11 +10,11 @@
 // Print prompt string.
 void print_prompt();
 
+// Clear input buffer.
+void clear_input_buffer();
+
 // Input records from the user.
 void input_records(int records_count);
-
-// Save randomized records to the main tape.
-void randomize_records(int records_count);
 
 //  Load records from an input file to the main tape.
 void load_records_from_file(char *filename, int *record_count);
