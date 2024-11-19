@@ -18,10 +18,10 @@
 // Print debug information about the record.
 void print_debug(record_t record) {
     printf("---\n");
-    printf("DEBUG: Mass: %.2lf\n", record.mass);
-    printf("DEBUG: Specific heat capacity: %.2lf\n", record.specific_heat_capacity);
-    printf("DEBUG: Temperature change: %.2lf\n", record.temperature_change);
-    printf("DEBUG: Calculated sensible heat: %.6lf\n", calculate_sensible_heat(record));
+    printf("DEBUG: Mass: %u\n", record.mass);
+    printf("DEBUG: Specific heat capacity: %u\n", record.specific_heat_capacity);
+    printf("DEBUG: Temperature change: %u\n", record.temperature_change);
+    printf("DEBUG: Calculated sensible heat: %u\n", calculate_sensible_heat(record));
 }
 #endif
 

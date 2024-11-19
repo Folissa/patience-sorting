@@ -5,7 +5,8 @@ void print_prompt() {
 }
 
 void clear_input_buffer() {
-    while (getchar() != '\n');
+    while (getchar() != '\n')
+        ;
 }
 
 void input_records(int records_count) {
@@ -14,17 +15,17 @@ void input_records(int records_count) {
 
     while (records_counter != records_count) {
         record_t *record = create_record();
-        double mass, specific_heat_capacity, temperature_change;
+        unsigned int mass, specific_heat_capacity, temperature_change;
 
         print_prompt();
 
-        if (scanf("%lf %lf %lf", &mass, &specific_heat_capacity, &temperature_change) == 3) {
+        if (scanf("%u %u %u", &mass, &specific_heat_capacity, &temperature_change) == 3) {
             record->mass = mass;
             record->specific_heat_capacity = specific_heat_capacity;
             record->temperature_change = temperature_change;
             records_counter++;
         } else {
-            printf("Invalid input. Please enter three floating point numbers.\n");
+            printf("Invalid input. Please enter three non-negative integer numbers.\n");
             clear_input_buffer();
             continue;
         }

@@ -24,7 +24,10 @@ void destroy_record(record_t *record) {
 void append_record(char *filename, record_t *record) {
     FILE *file = open_file(filename, "a");
 
-    fprintf(file, "%.2f %.2f %.2f ", record->mass, record->specific_heat_capacity, record->temperature_change);
+    fprintf(file, "%0*u%0*u%0*u",
+        INT_WIDTH, record->mass,
+        INT_WIDTH, record->specific_heat_capacity,
+        INT_WIDTH, record->temperature_change);
 
     close_file(file);
 }
@@ -35,8 +38,14 @@ record_t *read_record(char *filename, int index) {
     record_t *record = create_record();
 
     int current_index = 0;
-    while (current_index <= index && !feof(file)) {
-        if (fscanf(file, "%lf %lf %lf", &record->mass, &record->specific_heat_capacity, &record->temperature_change) == 3) {
+    while (!feof(file)) {
+        char buffer[PARAMETERS_COUNT * INT_WIDTH + NULL_CHARACTER_SIZE];
+        if (fread(buffer, sizeof(char), PARAMETERS_COUNT * INT_WIDTH, file) == PARAMETERS_COUNT * INT_WIDTH) {
+            buffer[PARAMETERS_COUNT * INT_WIDTH] = '\0';
+            sscanf(buffer, "%*u%*u%*u",
+                INT_WIDTH, &record->mass,
+                INT_WIDTH, &record->specific_heat_capacity,
+                INT_WIDTH, &record->temperature_change);
             if (current_index == index) {
                 close_file(file);
                 return record;
@@ -46,12 +55,10 @@ record_t *read_record(char *filename, int index) {
             perror("Error reading from file");
             destroy_record(record);
             close_file(file);
-
             return NULL;
         }
     }
 
-    destroy_record(record);
     close_file(file);
 
     return record;
@@ -61,9 +68,9 @@ int count_records(char *filename) {
     FILE *file = open_file(filename, "r");
 
     int records_count = 0;
-    double mass, specific_heat_capacity, temperature_change;
+    char buffer[PARAMETERS_COUNT * INT_WIDTH + NULL_CHARACTER_SIZE];
 
-    while (fscanf(file, "%lf %lf %lf", &mass, &specific_heat_capacity, &temperature_change) == 3) {
+    while (fread(buffer, sizeof(char), PARAMETERS_COUNT * INT_WIDTH, file) == PARAMETERS_COUNT * INT_WIDTH) {
         records_count++;
     }
 

@@ -1,13 +1,16 @@
 #pragma once
 
 typedef struct sensible_heat {
-    double mass;
-    double specific_heat_capacity;
-    double temperature_change;
+    unsigned int mass;
+    unsigned int specific_heat_capacity;
+    unsigned int temperature_change;
 } record_t;
 
 #define RECORD_SIZE sizeof(record_t)
+#define PARAMETERS_COUNT sizeof(record_t) / sizeof(unsigned int)
+#define NULL_CHARACTER_SIZE 1
 #define RECORD_COUNT 4
+#define INT_WIDTH 4
 #define PAGE_SIZE RECORD_COUNT *RECORD_SIZE
 #define MAX_RECORD_COUNT 1000
 #define INPUT_FILENAME "input.txt"
