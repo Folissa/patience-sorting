@@ -1,11 +1,16 @@
 #pragma once
 
-#include <stdlib.h>
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
-typedef struct { 
+#include "constants.h"
+#include "record.h"
+
+typedef struct {
     char *filename;
     int current_page_index;
+    record_t *current_page[PAGE_SIZE];
 } tape_t;
 
 //
