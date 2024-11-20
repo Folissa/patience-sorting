@@ -11,6 +11,8 @@ void clear_input_buffer() {
 
 void input_records(int records_count, tape_t tape) {
     init_file(tape.filename);
+    FILE *file = open_file(tape.filename, "a");
+
     int records_counter = 0;
 
     while (records_counter != records_count) {
@@ -30,9 +32,11 @@ void input_records(int records_count, tape_t tape) {
             continue;
         }
 
-        append_record(tape.filename, record);
+        append_record(file, record);
         destroy_record(record);
     };
+
+    close_file(file);
 }
 
 void load_records_from_file(char *filename, int *record_count, tape_t tape) {

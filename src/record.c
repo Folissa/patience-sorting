@@ -1,13 +1,5 @@
 #include "record.h"
 
-void serialize_page(FILE *file) {
-    // TODO: Implement
-}
-
-void deserialize_page(FILE *file) {
-    // TODO: Implement
-}
-
 record_t *create_record() {
     record_t *record = (record_t *)malloc(sizeof(record_t));
     if (record == NULL) {
@@ -21,20 +13,14 @@ void destroy_record(record_t *record) {
     free(record);
 }
 
-void append_record(char *filename, record_t *record) {
-    FILE *file = open_file(filename, "a");
-
+void append_record(FILE *file, record_t *record) {
     fprintf(file, "%0*u%0*u%0*u",
         INT_WIDTH, record->mass,
         INT_WIDTH, record->specific_heat_capacity,
         INT_WIDTH, record->temperature_change);
-
-    close_file(file);
 }
 
-record_t *read_record(char *filename, int index) {
-    FILE *file = open_file(filename, "r");
-
+record_t *read_record(FILE *file, int index) {
     record_t *record = create_record();
 
     int current_index = 0;
@@ -47,19 +33,15 @@ record_t *read_record(char *filename, int index) {
                 INT_WIDTH, &record->specific_heat_capacity,
                 INT_WIDTH, &record->temperature_change);
             if (current_index == index) {
-                close_file(file);
                 return record;
             }
             current_index++;
         } else {
             perror("Error reading from file");
             destroy_record(record);
-            close_file(file);
             return NULL;
         }
     }
-
-    close_file(file);
 
     return record;
 }

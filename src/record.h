@@ -20,10 +20,10 @@ record_t *create_record();
 void destroy_record(record_t *record);
 
 // Append record to a file.
-void append_record(char *filename, record_t *record);
+void append_record(FILE *file, record_t *record);
 
 // Read record from a file.
-record_t *read_record(char *filename, int index);
+record_t *read_record(FILE *file, int index);
 
 // Count records in the file.
 int count_records(char *filename);
