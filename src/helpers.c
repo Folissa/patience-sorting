@@ -11,12 +11,12 @@ record_t *randomize_record() {
     return record;
 }
 
-void randomize_records(int records_count) {
-    init_file(TAPE_1_FILENAME);
+void randomize_records(int records_count, tape_t tape) {
+    init_file(tape.filename);
 
     for (int i = 0; i < records_count; i++) {
         record_t *record = randomize_record();
-        append_record(TAPE_1_FILENAME, record);
+        append_record(tape.filename, record);
         destroy_record(record);
     }
 }

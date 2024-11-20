@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <time.h>
 
+#include "tape.h"
 #include "input.h"
 
 // TODO: Sorting by heat, tapes should be implemented using files
@@ -27,10 +28,15 @@ void print_debug(record_t record) {
 
 int main() {
     srand(time(NULL));
-
+    
     int records_count = 0;
 
-    prompt_for_records(&records_count);
+    tape_t *tape_1 = create_tape();
+    tape_1 = initialize_tape(tape_1, TAPE_1_FILENAME);
+
+    load_records(&records_count, *tape_1);
+
+    destroy_tape(tape_1);
 
     return 0;
 }

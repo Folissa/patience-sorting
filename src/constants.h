@@ -1,11 +1,5 @@
 #pragma once
 
-typedef struct sensible_heat {
-    unsigned int mass;
-    unsigned int specific_heat_capacity;
-    unsigned int temperature_change;
-} record_t;
-
 #define RECORD_SIZE sizeof(record_t)
 #define PARAMETERS_COUNT sizeof(record_t) / sizeof(unsigned int)
 #define NULL_CHARACTER_SIZE 1

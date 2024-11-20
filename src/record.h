@@ -5,12 +5,18 @@
 
 #include "constants.h"
 #include "file.h"
-#include "records.h"
+#include "record.h"
 
-// Create new record.
+typedef struct sensible_heat {
+    unsigned int mass;
+    unsigned int specific_heat_capacity;
+    unsigned int temperature_change;
+} record_t;
+
+// Create new record - allocate memory.
 record_t *create_record();
 
-// Destroy a record.
+// Destroy a record - free memory.
 void destroy_record(record_t *record);
 
 // Append record to a file.

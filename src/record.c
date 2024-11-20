@@ -1,4 +1,4 @@
-#include "records.h"
+#include "record.h"
 
 void serialize_page(FILE *file) {
     // TODO: Implement

@@ -9,8 +9,8 @@ void clear_input_buffer() {
         ;
 }
 
-void input_records(int records_count) {
-    init_file(TAPE_1_FILENAME);
+void input_records(int records_count, tape_t tape) {
+    init_file(tape.filename);
     int records_counter = 0;
 
     while (records_counter != records_count) {
@@ -30,32 +30,32 @@ void input_records(int records_count) {
             continue;
         }
 
-        append_record(TAPE_1_FILENAME, record);
+        append_record(tape.filename, record);
         destroy_record(record);
     };
 }
 
-void load_records_from_file(char *filename, int *record_count) {
-    init_file(TAPE_1_FILENAME);
+void load_records_from_file(char *filename, int *record_count, tape_t tape) {
+    init_file(tape.filename);
 
     *record_count = count_records(filename);
 
-    copy_file(filename, TAPE_1_FILENAME);
+    copy_file(filename, tape.filename);
 }
 
-void load_records_from_keyboard(int *records_count) {
+void load_records_from_keyboard(int *records_count, tape_t tape) {
     printf("Input number of records you will be inputting:\n");
     print_prompt();
     scanf("%d", records_count);
     printf("Input records, one per line, and the values in the following order: mass specific_heat_capacity temperature_change\n");
-    input_records(*records_count);
+    input_records(*records_count, tape);
 }
 
-record_t *load_records_generated_randomly(int *records_count) {
+record_t *load_records_generated_randomly(int *records_count, tape_t tape) {
     printf("Input number of records to generate:\n");
     print_prompt();
     scanf("%d", records_count);
-    randomize_records(*records_count);
+    randomize_records(*records_count, tape);
 }
 
 void print_menu() {
@@ -65,7 +65,7 @@ void print_menu() {
     printf("4. Exit\n");
 }
 
-void prompt_for_records(int *records_count) {
+void load_records(int *records_count, tape_t tape) {
     int exit = 0;
     int choice;
 
@@ -75,15 +75,15 @@ void prompt_for_records(int *records_count) {
         scanf("%d", &choice);
         switch (choice) {
         case 1:
-            load_records_from_file(INPUT_FILENAME, records_count);
+            load_records_from_file(INPUT_FILENAME, records_count, tape);
             exit = 1;
             break;
         case 2:
-            load_records_from_keyboard(records_count);
+            load_records_from_keyboard(records_count, tape);
             exit = 1;
             break;
         case 3:
-            load_records_generated_randomly(records_count);
+            load_records_generated_randomly(records_count, tape);
             exit = 1;
             break;
         case 4:
