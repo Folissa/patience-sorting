@@ -51,13 +51,10 @@ void delete_file(char *filename) {
 void copy_file(char *source_filename, char *destination_filename) {
     FILE *source_file = open_file(source_filename, "r");
     FILE *destination_file = open_file(destination_filename, "w");
-
     char character;
-
     while ((character = fgetc(source_file)) != EOF) {
         fputc(character, destination_file);
     }
-
     close_file(source_file);
     close_file(destination_file);
 }

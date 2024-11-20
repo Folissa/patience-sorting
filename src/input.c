@@ -12,15 +12,11 @@ void clear_input_buffer() {
 void input_records(int records_count, tape_t tape) {
     init_file(tape.filename);
     FILE *file = open_file(tape.filename, "a");
-
     int records_counter = 0;
-
     while (records_counter != records_count) {
         record_t *record = create_record();
         unsigned int mass, specific_heat_capacity, temperature_change;
-
         print_prompt();
-
         if (scanf("%u %u %u", &mass, &specific_heat_capacity, &temperature_change) == 3) {
             record->mass = mass;
             record->specific_heat_capacity = specific_heat_capacity;
@@ -31,7 +27,6 @@ void input_records(int records_count, tape_t tape) {
             clear_input_buffer();
             continue;
         }
-
         append_record(file, record);
         destroy_record(record);
     };
@@ -41,9 +36,7 @@ void input_records(int records_count, tape_t tape) {
 
 void load_records_from_file(char *filename, int *record_count, tape_t tape) {
     init_file(tape.filename);
-
     *record_count = count_records(filename);
-
     copy_file(filename, tape.filename);
 }
 
@@ -72,7 +65,6 @@ void print_menu() {
 void load_records(int *records_count, tape_t tape) {
     int exit = 0;
     int choice;
-
     while (!exit) {
         print_menu();
         print_prompt();

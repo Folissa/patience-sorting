@@ -1,7 +1,7 @@
 #include "record.h"
 
 record_t *create_record() {
-    record_t *record = (record_t *)malloc(sizeof(record_t));
+    record_t *record = (record_t *)malloc(RECORD_SIZE);
     if (record == NULL) {
         perror("Error allocating memory");
         return NULL;
@@ -22,7 +22,6 @@ void append_record(FILE *file, record_t *record) {
 
 record_t *read_record(FILE *file, int index) {
     record_t *record = create_record();
-
     int current_index = 0;
     while (!feof(file)) {
         char buffer[PARAMETERS_COUNT * INT_WIDTH + NULL_CHARACTER_SIZE];
@@ -42,28 +41,21 @@ record_t *read_record(FILE *file, int index) {
             return NULL;
         }
     }
-
     return record;
 }
 
 int count_records(char *filename) {
     FILE *file = open_file(filename, "r");
-
     int records_count = 0;
     char buffer[PARAMETERS_COUNT * INT_WIDTH + NULL_CHARACTER_SIZE];
-
     while (fread(buffer, sizeof(char), PARAMETERS_COUNT * INT_WIDTH, file) == PARAMETERS_COUNT * INT_WIDTH) {
         records_count++;
     }
-
     fclose(file);
     return records_count;
 }
 
 double calculate_sensible_heat(record_t record) {
-    double result;
-
-    result = record.mass * record.specific_heat_capacity * record.temperature_change;
-
+    double result = record.mass * record.specific_heat_capacity * record.temperature_change;
     return result;
 }

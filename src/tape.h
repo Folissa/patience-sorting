@@ -10,7 +10,7 @@
 typedef struct {
     char *filename;
     int current_page_index;
-    record_t *current_page[PAGE_SIZE];
+    record_t **current_page;
 } tape_t;
 
 //
