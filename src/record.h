@@ -22,7 +22,10 @@ void destroy_record(record_t *record);
 // Append record to a file.
 void append_record(FILE *file, record_t *record);
 
-// Read record from a file.
+// Write record to a file at specific index.
+int write_record(FILE *file, record_t *record, int index);
+
+// Read record from a file at specific index.
 record_t *read_record(FILE *file, int index);
 
 // Count records in the file.

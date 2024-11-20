@@ -6,18 +6,27 @@ tape_t *create_tape() {
         perror("Error allocating memory");
         return NULL;
     }
+    tape->current_page = (record_t **)malloc(PAGE_SIZE);
+    if (tape->current_page == NULL) {
+        perror("Error allocating memory");
+        return NULL;
+    }
+    for (int i = 0; i < RECORD_COUNT_PER_PAGE; i++) {
+        tape->current_page[i] = create_record();
+    }
     return tape;
 }
 
 tape_t *initialize_tape(tape_t *tape, char *filename) {
     tape->filename = filename;
     tape->current_page_index = 0;
-    for (int i = 0; i < PAGE_SIZE; i++) {
-        tape->current_page[i] = NULL;
-    }
     return tape;
 }
 
 void destroy_tape(tape_t *tape) {
+    for (int i = 0; i < RECORD_COUNT_PER_PAGE; i++) {
+        free(tape->current_page[i]);
+    }
+    free(tape->current_page);
     free(tape);
 }

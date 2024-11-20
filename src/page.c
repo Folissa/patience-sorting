@@ -10,16 +10,18 @@ record_t **create_page() {
 }
 
 void destroy_page(record_t **page) {
-    for (int i = 0; i < PAGE_SIZE; i++) {
+    for (int i = 0; i < RECORD_COUNT_PER_PAGE; i++) {
         destroy_record(page[i]);
     }
     free(page);
 }
 
-void serialize_page(char *filename, record_t **page, int saves) {
-    FILE *file = open_file(filename, "a");
-    for (int i = 0; i < PAGE_SIZE; i++) {
-        append_record(file, page[i]);
+void serialize_page(char *filename, record_t **page, int index, int saves) {
+    FILE *file = open_file(filename, "r+");
+    for (int i = 0; i < RECORD_COUNT_PER_PAGE; i++) {
+        if (!write_record(file, page[i], index)) {
+            break;
+        }
     }
     close_file(file);
     destroy_page(page);
@@ -29,7 +31,7 @@ void serialize_page(char *filename, record_t **page, int saves) {
 record_t **deserialize_page(char *filename, int index, int loads) {
     FILE *file = open_file(filename, "r");
     record_t **page = create_page();
-    for (int i = 0; i < PAGE_SIZE; i++) {
+    for (int i = 0; i < RECORD_COUNT_PER_PAGE; i++) {
         page[i] = read_record(file, index);
     }
     close_file(file);

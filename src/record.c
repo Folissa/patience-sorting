@@ -20,6 +20,20 @@ void append_record(FILE *file, record_t *record) {
         INT_WIDTH, record->temperature_change);
 }
 
+int write_record(FILE *file, record_t *record, int index) {
+    int record_size = PARAMETERS_COUNT * INT_WIDTH;
+    long int offset = index * record_size;
+    if (fseek(file, offset, SEEK_SET) != 0) {
+        perror("Error seeking in file");
+        return 0;
+    }
+    fprintf(file, "%0*u%0*u%0*u",
+        INT_WIDTH, record->mass,
+        INT_WIDTH, record->specific_heat_capacity,
+        INT_WIDTH, record->temperature_change);
+    return 1;
+}
+
 record_t *read_record(FILE *file, int index) {
     record_t *record = create_record();
     int current_index = 0;
