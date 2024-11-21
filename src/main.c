@@ -31,13 +31,15 @@ int main() {
     
     int records_count = 0;
     int loads = 0;
+    int saves = 0;
 
     tape_t *tape_1 = create_tape();
     tape_1 = initialize_tape(tape_1, TAPE_1_FILENAME);
 
     load_records(&records_count, *tape_1);
 
-    page_t *page = read_page(tape_1->filename, tape_1->current_page_index, &loads);
+    page_t *page = read_page(tape_1->filename, 0, &loads);
+    write_page(tape_1->filename, page, 1, &saves);
     destroy_page(page);    
 
     destroy_tape(tape_1);

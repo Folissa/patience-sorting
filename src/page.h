@@ -6,19 +6,13 @@
 
 typedef struct {
     record_t **records;
-    int current_record_index;
-    record_t *current_record;
 } page_t;
-
 
 // Create new page - allocate memory.
 page_t *create_page();
 
 // Destroy a page - free memory.
 void destroy_page(page_t *page);
-
-// Initialize all fields of the page;
-void initialize_page(page_t *page);
 
 // Write page to a file (tape). Increments number of saves.
 void write_page(char *filename, page_t *page, int page_index, int *saves);

@@ -16,46 +16,44 @@ void append_record(FILE *file, record_t *record) {
         INT_WIDTH, record->temperature_change);
 }
 
-int write_record(FILE *file, record_t *record, int index) {
+void write_record(FILE *file, record_t *record, int record_index) {
     int record_size = PARAMETERS_COUNT * INT_WIDTH;
-    long int offset = index * record_size;
+    long int offset = record_index * record_size;
     if (fseek(file, offset, SEEK_SET) != 0) {
         perror("Error seeking in file");
-        return 0;
+        return;
     }
     fprintf(file, "%0*d%0*d%0*d",
         INT_WIDTH, record->mass,
         INT_WIDTH, record->specific_heat_capacity,
         INT_WIDTH, record->temperature_change);
-    return 1;
 }
 
-record_t *read_record(FILE *file, int index) {
-    record_t *record = create_record();
-    int current_index = 0;
-    while (!feof(file)) {
-        char buffer[PARAMETERS_COUNT * INT_WIDTH + NULL_CHARACTER_SIZE];
-        if (fread(buffer, sizeof(char), PARAMETERS_COUNT * INT_WIDTH, file) == PARAMETERS_COUNT * INT_WIDTH) {
-            buffer[PARAMETERS_COUNT * INT_WIDTH] = '\0';
-            char temp[INT_WIDTH + NULL_CHARACTER_SIZE];
-            temp[INT_WIDTH] = '\0';
-            memcpy(temp, buffer, INT_WIDTH);
-            record->mass = atoi(temp);
-            memcpy(temp, buffer + INT_WIDTH, INT_WIDTH);
-            record->specific_heat_capacity = atoi(temp);
-            memcpy(temp, buffer + 2 * INT_WIDTH, INT_WIDTH);
-            record->temperature_change = atoi(temp);
-            if (current_index == index) {
-                return record;
-            }
-            current_index++;
-        } else {
-            // The end of file has been reached
-            destroy_record(record);
-            return NULL;
-        }
+record_t *read_record(FILE *file, int record_index) {
+    int record_size = PARAMETERS_COUNT * INT_WIDTH;
+    long int offset = record_index * record_size;
+    if (fseek(file, offset, SEEK_SET) != 0) {
+        perror("Error seeking in file");
+        return NULL;
     }
-    return record;
+    record_t *record = create_record();
+    char buffer[PARAMETERS_COUNT * INT_WIDTH + NULL_CHARACTER_SIZE];
+    buffer[PARAMETERS_COUNT * INT_WIDTH] = '\0';
+    if (fread(buffer, sizeof(char), PARAMETERS_COUNT * INT_WIDTH, file) == PARAMETERS_COUNT * INT_WIDTH) {
+        char temp[INT_WIDTH + NULL_CHARACTER_SIZE];
+        temp[INT_WIDTH] = '\0';
+        memcpy(temp, buffer, INT_WIDTH);
+        record->mass = atoi(temp);
+        memcpy(temp, buffer + INT_WIDTH, INT_WIDTH);
+        record->specific_heat_capacity = atoi(temp);
+        memcpy(temp, buffer + 2 * INT_WIDTH, INT_WIDTH);
+        record->temperature_change = atoi(temp);
+        return record;
+    }
+    else {
+        // Reached end of file
+        return NULL;
+    }
 }
 
 int count_records(char *filename) {

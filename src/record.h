@@ -24,10 +24,10 @@ void destroy_record(record_t *record);
 void append_record(FILE *file, record_t *record);
 
 // Write record to a file at specific index.
-int write_record(FILE *file, record_t *record, int index);
+void write_record(FILE *file, record_t *record, int record_index);
 
 // Read record from a file at specific index.
-record_t *read_record(FILE *file, int index);
+record_t *read_record(FILE *file, int record_index);
 
 // Count records in the file.
 int count_records(char *filename);

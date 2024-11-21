@@ -6,12 +6,7 @@ page_t *create_page() {
     for (int i = 0; i < RECORD_COUNT_PER_PAGE; i++) {
         page->records[i] = create_record();
     }
-    page->current_record = create_record();
     return page;
-}
-
-void initialize_page(page_t *page) {
-    page->current_record_index = 0;
 }
 
 void destroy_page(page_t *page) {
@@ -25,9 +20,8 @@ void destroy_page(page_t *page) {
 void write_page(char *filename, page_t *page, int page_index, int *saves) {
     FILE *file = open_file(filename, "r+");
     for (int i = 0; i < RECORD_COUNT_PER_PAGE; i++) {
-        if (!write_record(file, page->records[i], page_index)) {
-            break;
-        }
+        int record_index = page_index * RECORD_COUNT_PER_PAGE + i;
+        write_record(file, page->records[i], record_index);
     }
     close_file(file);
     (*saves)++;
@@ -37,7 +31,8 @@ page_t *read_page(char *filename, int page_index, int *loads) {
     FILE *file = open_file(filename, "r");
     page_t *page = create_page();
     for (int i = 0; i < RECORD_COUNT_PER_PAGE; i++) {
-        page->records[i] = read_record(file, page_index);
+        int record_index = page_index * RECORD_COUNT_PER_PAGE + i;
+        page->records[i] = read_record(file, record_index);
     }
     close_file(file);
     (*loads)++;
