@@ -1,25 +1,31 @@
 #include "page.h"
 
-record_t **create_page() {
-    record_t **page = (record_t **)malloc(PAGE_SIZE);
-    if (page == NULL) {
-        perror("Error allocating memory");
-        return NULL;
+page_t *create_page() {
+    page_t *page = (page_t *)malloc(sizeof(page_t));
+    page->records = (record_t **)malloc(RECORD_COUNT_PER_PAGE * sizeof(record_t *));
+    for (int i = 0; i < RECORD_COUNT_PER_PAGE; i++) {
+        page->records[i] = create_record();
     }
+    page->current_record = create_record();
     return page;
 }
 
-void destroy_page(record_t **page) {
+void initialize_page(page_t *page) {
+    page->current_record_index = 0;
+}
+
+void destroy_page(page_t *page) {
     for (int i = 0; i < RECORD_COUNT_PER_PAGE; i++) {
-        destroy_record(page[i]);
+        destroy_record(page->records[i]);
     }
+    free(page->records);
     free(page);
 }
 
-void write_page(char *filename, record_t **page, int page_index, int *saves) {
+void write_page(char *filename, page_t *page, int page_index, int *saves) {
     FILE *file = open_file(filename, "r+");
     for (int i = 0; i < RECORD_COUNT_PER_PAGE; i++) {
-        if (!write_record(file, page[i], page_index)) {
+        if (!write_record(file, page->records[i], page_index)) {
             break;
         }
     }
@@ -27,11 +33,11 @@ void write_page(char *filename, record_t **page, int page_index, int *saves) {
     (*saves)++;
 }
 
-record_t **read_page(char *filename, int page_index, int *loads) {
+page_t *read_page(char *filename, int page_index, int *loads) {
     FILE *file = open_file(filename, "r");
-    record_t **page = create_page();
+    page_t *page = create_page();
     for (int i = 0; i < RECORD_COUNT_PER_PAGE; i++) {
-        page[i] = read_record(file, page_index);
+        page->records[i] = read_record(file, page_index);
     }
     close_file(file);
     (*loads)++;

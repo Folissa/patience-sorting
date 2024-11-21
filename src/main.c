@@ -28,15 +28,17 @@ void print_debug(record_t record) {
 
 int main() {
     srand(time(NULL));
+    
     int records_count = 0;
     int loads = 0;
+
     tape_t *tape_1 = create_tape();
     tape_1 = initialize_tape(tape_1, TAPE_1_FILENAME);
+
     load_records(&records_count, *tape_1);
 
-    record_t **page = read_page(tape_1->filename, tape_1->current_page_index, &loads);
-    tape_1->current_page_index++;
-
+    page_t *page = read_page(tape_1->filename, tape_1->current_page_index, &loads);
+    destroy_page(page);    
 
     destroy_tape(tape_1);
     return 0;

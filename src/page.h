@@ -4,14 +4,24 @@
 
 #include "record.h"
 
+typedef struct {
+    record_t **records;
+    int current_record_index;
+    record_t *current_record;
+} page_t;
+
+
 // Create new page - allocate memory.
-record_t **create_page();
+page_t *create_page();
 
 // Destroy a page - free memory.
-void destroy_page(record_t **page);
+void destroy_page(page_t *page);
+
+// Initialize all fields of the page;
+void initialize_page(page_t *page);
 
 // Write page to a file (tape). Increments number of saves.
-void write_page(char *filename, record_t **page, int page_index, int *saves);
+void write_page(char *filename, page_t *page, int page_index, int *saves);
 
 // Load page from a file (tape). Increments number of loads.
-record_t **read_page(char *filename, int page_index, int *loads);
+page_t *read_page(char *filename, int page_index, int *loads);

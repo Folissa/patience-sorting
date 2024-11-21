@@ -1,11 +1,7 @@
 #include "record.h"
 
 record_t *create_record() {
-    record_t *record = (record_t *)malloc(RECORD_SIZE);
-    if (record == NULL) {
-        perror("Error allocating memory");
-        return NULL;
-    }
+    record_t *record = (record_t *)malloc(sizeof(record_t));
     return record;
 }
 
@@ -73,6 +69,7 @@ int count_records(char *filename) {
     return records_count;
 }
 
+// TODO: Move this elsewhere?
 double calculate_sensible_heat(record_t record) {
     double result = record.mass * record.specific_heat_capacity * record.temperature_change;
     return result;
