@@ -16,25 +16,24 @@ void destroy_page(record_t **page) {
     free(page);
 }
 
-void serialize_page(char *filename, record_t **page, int index, int saves) {
+void write_page(char *filename, record_t **page, int page_index, int *saves) {
     FILE *file = open_file(filename, "r+");
     for (int i = 0; i < RECORD_COUNT_PER_PAGE; i++) {
-        if (!write_record(file, page[i], index)) {
+        if (!write_record(file, page[i], page_index)) {
             break;
         }
     }
     close_file(file);
-    destroy_page(page);
-    saves++;
+    (*saves)++;
 }
 
-record_t **deserialize_page(char *filename, int index, int loads) {
+record_t **read_page(char *filename, int page_index, int *loads) {
     FILE *file = open_file(filename, "r");
     record_t **page = create_page();
     for (int i = 0; i < RECORD_COUNT_PER_PAGE; i++) {
-        page[i] = read_record(file, index);
+        page[i] = read_record(file, page_index);
     }
     close_file(file);
-    loads++;
+    (*loads)++;
     return page;
 }

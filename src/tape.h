@@ -6,6 +6,7 @@
 
 #include "constants.h"
 #include "record.h"
+#include "page.h"
 
 typedef struct {
     char *filename;

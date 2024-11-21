@@ -2,15 +2,16 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #include "constants.h"
 #include "file.h"
 #include "record.h"
 
 typedef struct sensible_heat {
-    unsigned int mass;
-    unsigned int specific_heat_capacity;
-    unsigned int temperature_change;
+    int mass;
+    int specific_heat_capacity;
+    int temperature_change;
 } record_t;
 
 // Create new record - allocate memory.

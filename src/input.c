@@ -15,9 +15,9 @@ void input_records(int records_count, tape_t tape) {
     int records_counter = 0;
     while (records_counter != records_count) {
         record_t *record = create_record();
-        unsigned int mass, specific_heat_capacity, temperature_change;
+        int mass, specific_heat_capacity, temperature_change;
         print_prompt();
-        if (scanf("%u %u %u", &mass, &specific_heat_capacity, &temperature_change) == 3) {
+        if (scanf("%d %d %d", &mass, &specific_heat_capacity, &temperature_change) == 3) {
             record->mass = mass;
             record->specific_heat_capacity = specific_heat_capacity;
             record->temperature_change = temperature_change;

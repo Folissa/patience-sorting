@@ -14,7 +14,7 @@ void destroy_record(record_t *record) {
 }
 
 void append_record(FILE *file, record_t *record) {
-    fprintf(file, "%0*u%0*u%0*u",
+    fprintf(file, "%0*d%0*d%0*d",
         INT_WIDTH, record->mass,
         INT_WIDTH, record->specific_heat_capacity,
         INT_WIDTH, record->temperature_change);
@@ -27,7 +27,7 @@ int write_record(FILE *file, record_t *record, int index) {
         perror("Error seeking in file");
         return 0;
     }
-    fprintf(file, "%0*u%0*u%0*u",
+    fprintf(file, "%0*d%0*d%0*d",
         INT_WIDTH, record->mass,
         INT_WIDTH, record->specific_heat_capacity,
         INT_WIDTH, record->temperature_change);
@@ -41,16 +41,20 @@ record_t *read_record(FILE *file, int index) {
         char buffer[PARAMETERS_COUNT * INT_WIDTH + NULL_CHARACTER_SIZE];
         if (fread(buffer, sizeof(char), PARAMETERS_COUNT * INT_WIDTH, file) == PARAMETERS_COUNT * INT_WIDTH) {
             buffer[PARAMETERS_COUNT * INT_WIDTH] = '\0';
-            sscanf(buffer, "%*u%*u%*u",
-                INT_WIDTH, &record->mass,
-                INT_WIDTH, &record->specific_heat_capacity,
-                INT_WIDTH, &record->temperature_change);
+            char temp[INT_WIDTH + NULL_CHARACTER_SIZE];
+            temp[INT_WIDTH] = '\0';
+            memcpy(temp, buffer, INT_WIDTH);
+            record->mass = atoi(temp);
+            memcpy(temp, buffer + INT_WIDTH, INT_WIDTH);
+            record->specific_heat_capacity = atoi(temp);
+            memcpy(temp, buffer + 2 * INT_WIDTH, INT_WIDTH);
+            record->temperature_change = atoi(temp);
             if (current_index == index) {
                 return record;
             }
             current_index++;
         } else {
-            perror("Error reading from file");
+            // The end of file has been reached
             destroy_record(record);
             return NULL;
         }

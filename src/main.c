@@ -19,19 +19,25 @@
 // Print debug information about the record.
 void print_debug(record_t record) {
     printf("---\n");
-    printf("DEBUG: Mass: %u\n", record.mass);
-    printf("DEBUG: Specific heat capacity: %u\n", record.specific_heat_capacity);
-    printf("DEBUG: Temperature change: %u\n", record.temperature_change);
-    printf("DEBUG: Calculated sensible heat: %u\n", calculate_sensible_heat(record));
+    printf("DEBUG: Mass: %d\n", record.mass);
+    printf("DEBUG: Specific heat capacity: %d\n", record.specific_heat_capacity);
+    printf("DEBUG: Temperature change: %d\n", record.temperature_change);
+    printf("DEBUG: Calculated sensible heat: %d\n", calculate_sensible_heat(record));
 }
 #endif
 
 int main() {
     srand(time(NULL));
     int records_count = 0;
+    int loads = 0;
     tape_t *tape_1 = create_tape();
     tape_1 = initialize_tape(tape_1, TAPE_1_FILENAME);
     load_records(&records_count, *tape_1);
+
+    record_t **page = read_page(tape_1->filename, tape_1->current_page_index, &loads);
+    tape_1->current_page_index++;
+
+
     destroy_tape(tape_1);
     return 0;
 }

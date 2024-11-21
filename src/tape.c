@@ -6,11 +6,7 @@ tape_t *create_tape() {
         perror("Error allocating memory");
         return NULL;
     }
-    tape->current_page = (record_t **)malloc(PAGE_SIZE);
-    if (tape->current_page == NULL) {
-        perror("Error allocating memory");
-        return NULL;
-    }
+    tape->current_page = create_page();
     for (int i = 0; i < RECORD_COUNT_PER_PAGE; i++) {
         tape->current_page[i] = create_record();
     }

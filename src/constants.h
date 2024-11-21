@@ -1,6 +1,6 @@
 #pragma once
 
-#define PARAMETERS_COUNT (sizeof(record_t) / sizeof(unsigned int))
+#define PARAMETERS_COUNT (sizeof(record_t) / sizeof(int))
 #define RECORD_COUNT_PER_PAGE 4
 
 #define NULL_CHARACTER_SIZE 1
