@@ -7,7 +7,7 @@ tape_t *create_tape(char *filename) {
     return tape;
 }
 
-void *initialize_tape(tape_t *tape, char *filename) {
+void initialize_tape(tape_t *tape, char *filename) {
     tape->filename = filename;
     tape->page_index = 0;
     tape->writes = 0;
@@ -23,7 +23,6 @@ void handle_full_page(tape_t *tape, int write, int read) {
     if (is_page_full(*(tape->page))) {
         if (write)
             write_page(tape);
-            
         tape->page_index++;
         tape->page->record_index = 0;
         if (read)
@@ -35,8 +34,10 @@ void write_page(tape_t *tape) {
     FILE *file = open_file(tape->filename, "r+");
     for (int i = 0; i < RECORD_COUNT_PER_PAGE; i++) {
         int record_index = tape->page_index * RECORD_COUNT_PER_PAGE + i;
+        if (!record_exists(tape->page->records[i]))
+            break;
         write_record(file, tape->page->records[i], record_index);
-        // TODO: Clear tape
+        // Clear record
         initialize_record(tape->page->records[i]);
     }
     close_file(file);
@@ -45,9 +46,40 @@ void write_page(tape_t *tape) {
 
 void read_page(tape_t *tape) {
     FILE *file = open_file(tape->filename, "r");
-    for (int i = 0; i < RECORD_COUNT_PER_PAGE; i++) {
-        int record_index = tape->page_index * RECORD_COUNT_PER_PAGE + i;
-        read_record(file, tape->page->records[i], record_index);
+    int page_index = tape->page_index;
+    int record_size = PARAMETERS_COUNT * INT_WIDTH;
+    int records_size = RECORD_COUNT_PER_PAGE * record_size;
+    long int page_offset = page_index * records_size;
+    if (fseek(file, page_offset, SEEK_SET) != 0) {
+        perror("Error seeking in file");
+    }
+    char buffer[records_size + NULL_CHARACTER_SIZE];
+    for (int i = 0; i < records_size + NULL_CHARACTER_SIZE; i++) {
+        buffer[i] = '\0';
+    }
+    if (fread(buffer, sizeof(char), records_size, file)) {
+        for (int i = 0; i < RECORD_COUNT_PER_PAGE; i++) {
+            int record_offset = i * record_size; 
+            // Situation: there are records to read, but it will not fill the whole page,
+            // so we initalize as they do not exist
+            if (buffer[record_offset] == '\0') {
+                initialize_record(tape->page->records[i]);
+                continue;
+            }
+            char temp[INT_WIDTH + NULL_CHARACTER_SIZE];
+            temp[INT_WIDTH] = '\0';
+            memcpy(temp, buffer + record_offset, INT_WIDTH);
+            tape->page->records[i]->mass = atoi(temp);
+            memcpy(temp, buffer + record_offset + INT_WIDTH, INT_WIDTH);
+            tape->page->records[i]->specific_heat_capacity = atoi(temp);
+            memcpy(temp, buffer + record_offset + 2 * INT_WIDTH, INT_WIDTH);
+            tape->page->records[i]->temperature_change = atoi(temp);
+        }
+    } else {
+        // Reached EOF, mark whole page as non existing
+        for (int i = 0; i < RECORD_COUNT_PER_PAGE; i++) {
+            initialize_record(tape->page->records[i]);
+        }
     }
     close_file(file);
     (tape->reads)++;
@@ -66,7 +98,6 @@ void add_record_to_page(tape_t *tape, record_t *record) {
     tape->page->records[tape->page->record_index]->mass = record->mass;
     tape->page->records[tape->page->record_index]->specific_heat_capacity = record->specific_heat_capacity;
     tape->page->records[tape->page->record_index]->temperature_change = record->temperature_change;
-
 }
 
 record_t *get_next_record_from_page(tape_t *tape) {

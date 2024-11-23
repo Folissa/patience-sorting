@@ -17,7 +17,6 @@ void destroy_page(page_t *page) {
     for (int i = 0; i < RECORD_COUNT_PER_PAGE; i++) {
         destroy_record(page->records[i]);
     }
-    free(page->records);
     free(page);
 }
 

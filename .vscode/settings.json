@@ -17,5 +17,6 @@
         "memory": "c",
         "*.h": "c",
         "functional": "c"
-    }
+    },
+    "C_Cpp.default.compilerPath": "/usr/bin/clang"
 }

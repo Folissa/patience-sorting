@@ -53,6 +53,7 @@ int main() {
         add_record_to_page(tape_2, record);
         record = get_next_record_from_page(tape_1);
     }
+    write_page(tape_2);
 
     destroy_tape(tape_2);
     destroy_tape(tape_1);

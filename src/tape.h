@@ -20,7 +20,7 @@ typedef struct {
 tape_t *create_tape(char *filename);
 
 // Initialize all fields of the tape.
-void *initialize_tape(tape_t *tape, char *filename);
+void initialize_tape(tape_t *tape, char *filename);
 
 // Destroy a tape - free memory.
 void destroy_tape(tape_t *tape);
