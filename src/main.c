@@ -8,7 +8,7 @@
 // TODO: Sorting by heat, tapes should be implemented using files
 // TODO: Write and read one record to and from file [DONE]
 
-// TODO: In the end, the number of sorting phases, the amount of writes and reads of pages should be printed out
+// TODO: In the end, the number of sorting phases, the amount of writes and reads of pages should be printed out [D0NE]
 // TODO: File contents should be printed in the beginning and in the end
 // TODO: File contents should be printed after each sorting phase
 

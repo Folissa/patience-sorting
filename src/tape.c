@@ -37,7 +37,6 @@ void write_page(tape_t *tape) {
         if (!record_exists(tape->page->records[i]))
             break;
         write_record(file, tape->page->records[i], record_index);
-        // Clear record
         initialize_record(tape->page->records[i]);
     }
     close_file(file);
@@ -59,7 +58,7 @@ void read_page(tape_t *tape) {
     }
     if (fread(buffer, sizeof(char), records_size, file)) {
         for (int i = 0; i < RECORD_COUNT_PER_PAGE; i++) {
-            int record_offset = i * record_size; 
+            int record_offset = i * record_size;
             // Situation: there are records to read, but it will not fill the whole page,
             // so we initalize as they do not exist
             if (buffer[record_offset] == '\0') {
@@ -86,7 +85,6 @@ void read_page(tape_t *tape) {
 }
 
 int is_at_end(tape_t *tape) {
-    // TODO: Fix this?
     return !(record_exists(tape->page->records[tape->page->record_index]));
 }
 

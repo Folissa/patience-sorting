@@ -1,7 +1,7 @@
 #include "sorting.h"
 
 int merge(tape_t *tape_1, tape_t *tape_2, tape_t *tape_3) {
-    // 
+    //
 }
 
 void distribute(tape_t *tape_1, tape_t *tape_2, tape_t *tape_3) {
@@ -11,7 +11,8 @@ void distribute(tape_t *tape_1, tape_t *tape_2, tape_t *tape_3) {
         record_t *current_record = get_next_record_from_page(tape_1);
         if (calculate_sensible_heat(*last_record) > calculate_sensible_heat(*current_record)) {
             toggle_tape = !toggle_tape;
-        } if (toggle_tape) {
+        }
+        if (toggle_tape) {
             add_record_to_page(tape_2, current_record);
         } else {
             add_record_to_page(tape_3, current_record);

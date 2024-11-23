@@ -9,14 +9,14 @@ typedef struct {
     int record_index;
 } page_t;
 
-// Create new page - allocate memory.
+// Create new page. Allocate memory, and initialize values.
 page_t *create_page();
 
-//
+// Initialize all fields of the page.
 void initialize_page(page_t *page);
 
-// Destroy a page - free memory.
+// Destroy a page.
 void destroy_page(page_t *page);
 
-//
+// Check if record count in page has reached RECORD_COUNT_PER_PAGE.
 int is_page_full(page_t page);

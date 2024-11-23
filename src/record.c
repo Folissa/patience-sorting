@@ -59,8 +59,7 @@ void read_record(FILE *file, record_t *record, int record_index) {
         record->specific_heat_capacity = atoi(temp);
         memcpy(temp, buffer + 2 * INT_WIDTH, INT_WIDTH);
         record->temperature_change = atoi(temp);
-    }
-    else {
+    } else {
         // Reached EOF
         initialize_record(record);
     }
@@ -77,7 +76,6 @@ int count_records(char *filename) {
     return records_count;
 }
 
-// TODO: Move this elsewhere?
 int calculate_sensible_heat(record_t record) {
     return record.mass * record.specific_heat_capacity * record.temperature_change;
 }

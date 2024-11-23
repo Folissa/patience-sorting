@@ -16,12 +16,13 @@ typedef struct sensible_heat {
 
 int record_exists(record_t *record);
 
-// Create new record - allocate memory.
+// Create new record. Allocate memory, and initialize values.
 record_t *create_record();
 
+// Initialize all fields of the record.
 void initialize_record(record_t *record);
 
-// Destroy a record - free memory.
+// Destroy a record.
 void destroy_record(record_t *record);
 
 // Append record to a file.
