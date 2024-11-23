@@ -5,6 +5,7 @@ void create_file(const char *filename) {
     if (!file) {
         perror("Error creating the file");
     }
+    close_file(file);
 }
 
 FILE *open_file(char *filename, char *mode) {
@@ -23,7 +24,7 @@ void close_file(FILE *file) {
 int check_file_existence(char *filename) {
     FILE *file = fopen(filename, "r");
     if (file) {
-        fclose(file);
+        close_file(file);
         return 1;
     } else {
         return 0;

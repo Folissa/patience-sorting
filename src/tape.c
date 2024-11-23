@@ -1,20 +1,71 @@
 #include "tape.h"
 
-tape_t *create_tape() {
+tape_t *create_tape(char *filename) {
     tape_t *tape = (tape_t *)malloc(sizeof(tape_t));
-    tape->current_page = create_page();
-    tape->current_record = create_record();
+    initialize_tape(tape, filename);
+    tape->page = create_page();
     return tape;
 }
 
 void *initialize_tape(tape_t *tape, char *filename) {
     tape->filename = filename;
-    tape->current_page_index = 0;
-    tape->current_record_index = 0;
+    tape->page_index = 0;
+    tape->writes = 0;
+    tape->reads = 0;
 }
 
 void destroy_tape(tape_t *tape) {
-    destroy_page(tape->current_page);
-    destroy_record(tape->current_record);
+    destroy_page(tape->page);
     free(tape);
+}
+
+void handle_full_page(tape_t *tape, int write, int read) {
+    if (is_page_full(*(tape->page))) {
+        if (write)
+            write_page(tape);
+        tape->page_index++;
+        tape->page->record_index = 0;
+        if (read)
+            read_page(tape);
+    }
+}
+
+void write_page(tape_t *tape) {
+    FILE *file = open_file(tape->filename, "r+");
+    for (int i = 0; i < RECORD_COUNT_PER_PAGE; i++) {
+        int record_index = tape->page_index * RECORD_COUNT_PER_PAGE + i;
+        write_record(file, tape->page->records[i], record_index);
+    }
+    close_file(file);
+    (tape->writes)++;
+}
+
+void read_page(tape_t *tape) {
+    FILE *file = open_file(tape->filename, "r");
+    for (int i = 0; i < RECORD_COUNT_PER_PAGE; i++) {
+        int record_index = tape->page_index * RECORD_COUNT_PER_PAGE + i;
+        read_record(file, tape->page->records[i], record_index);
+    }
+    close_file(file);
+    (tape->reads)++;
+}
+
+int is_at_end(tape_t *tape) {
+    return !(record_exists(tape->page->records[tape->page->record_index]));
+}
+
+void add_record_to_page(tape_t *tape, record_t *record) {
+    int *current_record_index = &(tape->page->record_index);
+    record_t **current_record = &(tape->page->records[*current_record_index]);
+    if (record_exists(*current_record)) {
+        (*current_record_index)++;
+    }
+    handle_full_page(tape, 1, 0);
+    *current_record = record;
+}
+
+record_t *get_next_record_from_page(tape_t *tape) {
+    tape->page->record_index++;
+    handle_full_page(tape, 0, 1);
+    return tape->page->records[tape->page->record_index];
 }

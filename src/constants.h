@@ -5,6 +5,7 @@
 
 #define NULL_CHARACTER_SIZE 1
 #define INT_WIDTH 4
+#define NOT_POSSIBLE_MASS -1
 
 #define INPUT_FILENAME "input.txt"
 #define TAPE_1_FILENAME "tape-1.txt"

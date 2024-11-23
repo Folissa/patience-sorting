@@ -3,6 +3,7 @@
 
 #include "tape.h"
 #include "input.h"
+#include "sorting.h"
 
 // TODO: Sorting by heat, tapes should be implemented using files
 // TODO: Write and read one record to and from file [DONE]
@@ -33,15 +34,29 @@ int main() {
     int loads = 0;
     int saves = 0;
 
-    tape_t *tape_1 = create_tape();
-    tape_1 = initialize_tape(tape_1, TAPE_1_FILENAME);
+    init_file(TAPE_1_FILENAME);
+    init_file(TAPE_2_FILENAME);
+    init_file(TAPE_3_FILENAME);
+
+
+    tape_t *tape_1 = create_tape(TAPE_1_FILENAME);
 
     load_records(&records_count, *tape_1);
 
-    page_t *page = read_page(tape_1->filename, 0, &loads);
-    write_page(tape_1->filename, page, 1, &saves);
-    destroy_page(page);    
+    // sort(tape_1);
 
+    tape_t *tape_2 = create_tape(TAPE_2_FILENAME);
+
+    read_page(tape_1);
+    record_t *record = tape_1->page->records[0];
+    while (!is_at_end(tape_1)) {
+        add_record_to_page(tape_2, record);
+        record = get_next_record_from_page(tape_1);
+
+    }
+    write_page(tape_2);
+
+    destroy_tape(tape_2);
     destroy_tape(tape_1);
     return 0;
 }
