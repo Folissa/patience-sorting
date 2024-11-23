@@ -1,4 +1,2 @@
-CMakeLists.txt
-.vscode
 build/*
 tape-[0-9].txt
