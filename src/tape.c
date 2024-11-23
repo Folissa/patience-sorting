@@ -98,6 +98,24 @@ void add_record_to_page(tape_t *tape, record_t *record) {
     tape->page->records[tape->page->record_index]->temperature_change = record->temperature_change;
 }
 
+void reset_tape(tape_t *tape) {
+    reset_page(tape);
+    tape->page_index = 0;
+}
+
+void reset_page(tape_t *tape) {
+    tape->page->record_index = 0;
+    for (int i = 0; i < RECORD_COUNT_PER_PAGE; i++) {
+        initialize_record(tape->page->records[i]);
+    }
+}
+
+void move_to_start(tape_t *tape) {
+    tape->page->record_index = 0;
+    tape->page_index = 0;
+    read_page(tape);
+}
+
 record_t *get_next_record_from_page(tape_t *tape) {
     tape->page->record_index++;
     handle_full_page(tape, 0, 1);

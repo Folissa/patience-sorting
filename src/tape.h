@@ -42,3 +42,9 @@ void add_record_to_page(tape_t *tape, record_t *record);
 
 // Get record from the page and handle when the page is full.
 record_t *get_next_record_from_page(tape_t *tape);
+
+void reset_tape(tape_t *tape);
+
+void reset_page(tape_t *tape);
+
+void move_to_start(tape_t *tape);

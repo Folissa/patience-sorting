@@ -79,3 +79,10 @@ int count_records(char *filename) {
 int calculate_sensible_heat(record_t record) {
     return record.mass * record.specific_heat_capacity * record.temperature_change;
 }
+
+
+void copy_record(record_t *source, record_t *destination) {
+    destination->mass = source->mass;
+    destination->specific_heat_capacity = source->specific_heat_capacity;
+    destination->temperature_change = source->temperature_change;
+}

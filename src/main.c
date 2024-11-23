@@ -38,23 +38,25 @@ int main() {
     init_file(TAPE_2_FILENAME);
     init_file(TAPE_3_FILENAME);
 
-
     tape_t *tape_1 = create_tape(TAPE_1_FILENAME);
+    tape_t *tape_2 = create_tape(TAPE_2_FILENAME);
+    tape_t *tape_3 = create_tape(TAPE_3_FILENAME);
 
     load_records(&records_count, *tape_1);
 
     // sort(tape_1);
 
-    tape_t *tape_2 = create_tape(TAPE_2_FILENAME);
+    distribute(tape_1, tape_2, tape_3);
 
-    read_page(tape_1);
-    record_t *record = tape_1->page->records[0];
-    while (!is_at_end(tape_1)) {
-        add_record_to_page(tape_2, record);
-        record = get_next_record_from_page(tape_1);
-    }
-    write_page(tape_2);
+    // read_page(tape_1);
+    // record_t *record = tape_1->page->records[0];
+    // while (!is_at_end(tape_1)) {
+    //     add_record_to_page(tape_2, record);
+    //     record = get_next_record_from_page(tape_1);
+    // }
+    // write_page(tape_2);
 
+    destroy_tape(tape_3);
     destroy_tape(tape_2);
     destroy_tape(tape_1);
     return 0;

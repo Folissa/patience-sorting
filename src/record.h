@@ -39,3 +39,5 @@ int count_records(char *filename);
 
 // Calculate sennsible heat.
 int calculate_sensible_heat(record_t record);
+
+void copy_record(record_t *source, record_t *destination);

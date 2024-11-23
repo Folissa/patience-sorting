@@ -5,11 +5,22 @@ int merge(tape_t *tape_1, tape_t *tape_2, tape_t *tape_3) {
 }
 
 void distribute(tape_t *tape_1, tape_t *tape_2, tape_t *tape_3) {
-    record_t *last_record;
+    move_to_start(tape_1);
+    // Reset the tapes
+    reset_tape(tape_2);
+    reset_tape(tape_3);
+    // Clear the tape files
+    clear_file(tape_2->filename);
+    clear_file(tape_3->filename);
+    // TODO: Potential memory leak?
+    record_t *last_record = create_record();
     int toggle_tape = 1;
     while (!is_at_end(tape_1)) {
         record_t *current_record = get_next_record_from_page(tape_1);
-        if (calculate_sensible_heat(*last_record) > calculate_sensible_heat(*current_record)) {
+        if (!record_exists(current_record))
+            break;
+        if (record_exists(last_record) && 
+            calculate_sensible_heat(*last_record) > calculate_sensible_heat(*current_record)) {
             toggle_tape = !toggle_tape;
         }
         if (toggle_tape) {
@@ -17,8 +28,15 @@ void distribute(tape_t *tape_1, tape_t *tape_2, tape_t *tape_3) {
         } else {
             add_record_to_page(tape_3, current_record);
         }
-        last_record = current_record;
+        copy_record(current_record, last_record);
     }
+    // Dump all the records to files
+    write_page(tape_2);
+    write_page(tape_3);
+    // Reset pages
+    reset_page(tape_2);
+    reset_page(tape_3);
+    destroy_record(last_record);
 }
 
 void sort(tape_t *tape_1) {
