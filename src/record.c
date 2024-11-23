@@ -61,7 +61,8 @@ void read_record(FILE *file, record_t *record, int record_index) {
         record->temperature_change = atoi(temp);
     }
     else {
-        // Reached the EOF
+        // Reached EOF
+        initialize_record(record);
     }
 }
 

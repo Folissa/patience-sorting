@@ -23,6 +23,7 @@ void handle_full_page(tape_t *tape, int write, int read) {
     if (is_page_full(*(tape->page))) {
         if (write)
             write_page(tape);
+            
         tape->page_index++;
         tape->page->record_index = 0;
         if (read)
@@ -35,6 +36,8 @@ void write_page(tape_t *tape) {
     for (int i = 0; i < RECORD_COUNT_PER_PAGE; i++) {
         int record_index = tape->page_index * RECORD_COUNT_PER_PAGE + i;
         write_record(file, tape->page->records[i], record_index);
+        // TODO: Clear tape
+        initialize_record(tape->page->records[i]);
     }
     close_file(file);
     (tape->writes)++;
@@ -51,17 +54,19 @@ void read_page(tape_t *tape) {
 }
 
 int is_at_end(tape_t *tape) {
+    // TODO: Fix this?
     return !(record_exists(tape->page->records[tape->page->record_index]));
 }
 
 void add_record_to_page(tape_t *tape, record_t *record) {
-    int *current_record_index = &(tape->page->record_index);
-    record_t **current_record = &(tape->page->records[*current_record_index]);
-    if (record_exists(*current_record)) {
-        (*current_record_index)++;
+    if (record_exists(tape->page->records[tape->page->record_index])) {
+        (tape->page->record_index)++;
     }
     handle_full_page(tape, 1, 0);
-    *current_record = record;
+    tape->page->records[tape->page->record_index]->mass = record->mass;
+    tape->page->records[tape->page->record_index]->specific_heat_capacity = record->specific_heat_capacity;
+    tape->page->records[tape->page->record_index]->temperature_change = record->temperature_change;
+
 }
 
 record_t *get_next_record_from_page(tape_t *tape) {

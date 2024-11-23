@@ -5,7 +5,7 @@
 #include "record.h"
 
 typedef struct {
-    record_t **records;
+    record_t *records[RECORD_COUNT_PER_PAGE];
     int record_index;
 } page_t;
 

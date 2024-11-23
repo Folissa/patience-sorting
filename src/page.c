@@ -3,7 +3,6 @@
 page_t *create_page() {
     page_t *page = (page_t *)malloc(sizeof(page_t));
     initialize_page(page);
-    page->records = (record_t **)malloc(RECORD_COUNT_PER_PAGE * sizeof(record_t *));
     for (int i = 0; i < RECORD_COUNT_PER_PAGE; i++) {
         page->records[i] = create_record();
     }
@@ -23,5 +22,5 @@ void destroy_page(page_t *page) {
 }
 
 int is_page_full(page_t page) {
-    return page.record_index >= RECORD_COUNT_PER_PAGE - 1;
+    return page.record_index >= RECORD_COUNT_PER_PAGE;
 }
