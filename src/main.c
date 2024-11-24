@@ -31,26 +31,14 @@ int main() {
     srand(time(NULL));
     
     int records_count = 0;
-    int loads = 0;
-    int saves = 0;
 
     init_file(TAPE_1_FILENAME);
     init_file(TAPE_2_FILENAME);
     init_file(TAPE_3_FILENAME);
 
     tape_t *tape_1 = create_tape(TAPE_1_FILENAME);
-
     load_records(&records_count, *tape_1);
-
-    record_t *record = create_record();
-    record->mass = 1111;
-    record->specific_heat_capacity = 2222;
-    record->temperature_change = 3333;
-    print_debug(*record);
-    destroy_record(record);
-
     sort(tape_1);
-
     destroy_tape(tape_1);
     return 0;
 }
