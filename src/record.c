@@ -53,9 +53,9 @@ void copy_record(record_t *source, record_t *destination) {
 #ifdef DEBUG
 void print_record(record_t record) {
     printf("------------------RECORD------------------\n");
-    printf("Mass: %36d\n", record.mass);
-    printf("Specific heat capacity: %18d\n", record.specific_heat_capacity);
-    printf("Temperature change: %22d\n", record.temperature_change);
-    printf("Calculated sensible heat: %16lld\n", calculate_sensible_heat(record));
+    // printf("Mass: %36d\n", record.mass);
+    // printf("Specific heat capacity: %18d\n", record.specific_heat_capacity);
+    // printf("Temperature change: %22d\n", record.temperature_change);
+    printf("Sensible heat: %27lld\n", calculate_sensible_heat(record));
 }
 #endif // DEBUG
