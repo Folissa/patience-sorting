@@ -16,6 +16,10 @@ void distribute(tape_t *tape_1, tape_t *tape_2, tape_t *tape_3);
 // Sort tape.
 void sort(tape_t *tape_1);
 
-void handle_when_finished(tape_t *source, tape_t *destination);
+// Handle when 
+void handle_end_of_run(tape_t *source, tape_t *destination);
+
+// Dump all of the record left in the source tape to the destination tape.
+int dump_rest(tape_t *source, tape_t *desitnation, record_t *last_record);
 
 #endif // SORTING_H

@@ -12,14 +12,14 @@ void initialize_record(record_t *record) {
     record->temperature_change = 0;
 }
 
+void destroy_record(record_t *record) {
+    free(record);
+}
+
 int record_exists(record_t *record) {
     if (record->mass == NOT_POSSIBLE_MASS)
         return 0;
     return 1;
-}
-
-void destroy_record(record_t *record) {
-    free(record);
 }
 
 void append_record(FILE *file, record_t *record) {
@@ -49,3 +49,13 @@ void copy_record(record_t *source, record_t *destination) {
     destination->specific_heat_capacity = source->specific_heat_capacity;
     destination->temperature_change = source->temperature_change;
 }
+
+#ifdef DEBUG
+void print_record(record_t record) {
+    printf("------------------RECORD------------------\n");
+    printf("Mass: %36d\n", record.mass);
+    printf("Specific heat capacity: %18d\n", record.specific_heat_capacity);
+    printf("Temperature change: %22d\n", record.temperature_change);
+    printf("Calculated sensible heat: %16lld\n", calculate_sensible_heat(record));
+}
+#endif // DEBUG

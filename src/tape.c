@@ -116,6 +116,16 @@ void add_record(tape_t *tape, record_t *record) {
     tape->page->records[tape->page->record_index]->temperature_change = record->temperature_change;
 }
 
+record_t *get_next(tape_t *tape) {
+    tape->page->record_index++;
+    handle_full_page(tape, 0, 1);
+    return tape->page->records[tape->page->record_index];
+}
+
+record_t *get_current(tape_t *tape) {
+    return tape->page->records[tape->page->record_index];
+}
+
 void reset_tape(tape_t *tape) {
     reset_page(tape);
     tape->page_index = 0;
@@ -134,27 +144,34 @@ void move_to_start(tape_t *tape) {
     read_page(tape);
 }
 
-record_t *get_next(tape_t *tape) {
-    tape->page->record_index++;
-    handle_full_page(tape, 0, 1);
-    return tape->page->records[tape->page->record_index];
-}
-
-record_t *get_current(tape_t *tape) {
-    return tape->page->records[tape->page->record_index];
-}
-
-int dump_rest(tape_t *source, tape_t *destination, record_t *last_record) {
-    int sorted = 1;
-    record_t *record = create_record();
-    while (!is_at_end(source)) {
-        copy_record(get_current(source), record);
-        if (record_exists(last_record) && calculate_sensible_heat(*record) < calculate_sensible_heat(*last_record))
-            sorted = 0;
-        copy_record(record, last_record);
-        add_record(destination, record);
-        get_next(source);
+#ifdef DEBUG
+void print_tape(tape_t *tape) {
+    // Remember all the values
+    int temp_page_index = tape->page_index;
+    int temp_record_index = tape->page->record_index;
+    page_t *page = create_page();
+    for (int i = 0; i < RECORD_COUNT_PER_PAGE; i++) {
+        copy_record(tape->page->records[i], page->records[i]);
     }
-    destroy_record(record);
-    return sorted;
+    int temp_writes = tape->writes;
+    int temp_reads = tape->reads;
+    // Print out all the records in the tape
+    tape->page_index = 0;
+    tape->page->record_index = 0;
+    read_page(tape);
+    record_t *record = get_current(tape);
+    while (!is_at_end(tape)) {
+        print_record(*record);
+        record = get_next(tape);
+    }
+    // Recover all the values
+    tape->page_index = temp_page_index;
+    tape->page->record_index = temp_record_index;
+    for (int i = 0; i < RECORD_COUNT_PER_PAGE; i++) {
+        copy_record(page->records[i], tape->page->records[i]);
+    }
+    tape->writes = temp_writes;
+    tape->reads = temp_reads;
+    destroy_page(page);
 }
+#endif // DEBUG
