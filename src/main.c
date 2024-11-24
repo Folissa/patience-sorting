@@ -5,7 +5,7 @@
 #include "input.h"
 #include "sorting.h"
 
-// TODO: Sorting by heat, tapes should be implemented using files
+// TODO: Sorting by heat, tapes should be implemented using files [DONE]
 // TODO: Write and read one record to and from file [DONE]
 
 // TODO: In the end, the number of sorting phases, the amount of writes and reads of pages should be printed out [D0NE]
