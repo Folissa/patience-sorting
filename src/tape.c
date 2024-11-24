@@ -143,3 +143,18 @@ record_t *get_next(tape_t *tape) {
 record_t *get_current(tape_t *tape) {
     return tape->page->records[tape->page->record_index];
 }
+
+int dump_rest(tape_t *source, tape_t *destination, record_t *last_record) {
+    int sorted = 1;
+    record_t *record = create_record();
+    while (!is_at_end(source)) {
+        copy_record(get_current(source), record);
+        if (record_exists(last_record) && calculate_sensible_heat(*record) < calculate_sensible_heat(*last_record))
+            sorted = 0;
+        copy_record(record, last_record);
+        add_record(destination, record);
+        get_next(source);
+    }
+    destroy_record(record);
+    return sorted;
+}

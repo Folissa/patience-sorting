@@ -60,4 +60,6 @@ void reset_page(tape_t *tape);
 
 void move_to_start(tape_t *tape);
 
+int dump_rest(tape_t *source, tape_t *desitnation, record_t *last_record);
+
 #endif // TAPE_H

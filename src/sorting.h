@@ -16,4 +16,6 @@ void distribute(tape_t *tape_1, tape_t *tape_2, tape_t *tape_3);
 // Sort tape.
 void sort(tape_t *tape_1);
 
+void handle_when_finished(tape_t *source, tape_t *destination);
+
 #endif // SORTING_H
