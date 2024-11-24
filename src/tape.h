@@ -1,5 +1,8 @@
 #pragma once
 
+#ifndef TAPE_H
+#define TAPE_H
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -38,13 +41,20 @@ void read_page(tape_t *tape);
 int is_at_end(tape_t *tape);
 
 // Add record to the page and handle when the page is full.
-void add_record_to_page(tape_t *tape, record_t *record);
+void add_record(tape_t *tape, record_t *record);
 
 // Get record from the page and handle when the page is full.
-record_t *get_next_record_from_page(tape_t *tape);
+record_t *get_next(tape_t *tape);
+
+record_t *get_current(tape_t *tape);
 
 void reset_tape(tape_t *tape);
 
 void reset_page(tape_t *tape);
 
 void move_to_start(tape_t *tape);
+
+// Read record from a file at specific index.
+void read_record(tape_t *tape, int record_size, char *buffer, int record_index);
+
+#endif // TAPE_H

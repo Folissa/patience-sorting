@@ -43,6 +43,25 @@ void write_page(tape_t *tape) {
     (tape->writes)++;
 }
 
+void read_record(tape_t *tape, int record_size, char *buffer, int record_index) {
+    int record_offset = record_index * record_size;
+    if (buffer[record_offset] == '\0') {
+        // Situation: there are records to read, but it will not fill the whole page,
+        // so we initalize as they do not exist
+        initialize_record(tape->page->records[record_index]);
+        return;
+    }
+    char temp[INT_WIDTH + NULL_CHARACTER_SIZE];
+    temp[INT_WIDTH] = '\0';
+    memcpy(temp, buffer + record_offset + FIRST_PARAMETER_OFFSET * INT_WIDTH, INT_WIDTH);
+    tape->page->records[record_index]->mass = atoi(temp);
+    memcpy(temp, buffer + record_offset + SECOND_PARAMETER_OFFSET * INT_WIDTH, INT_WIDTH);
+    tape->page->records[record_index]->specific_heat_capacity = atoi(temp);
+    memcpy(temp, buffer + record_offset + THIRD_PARAMETER_OFFSET * INT_WIDTH, INT_WIDTH);
+    tape->page->records[record_index]->temperature_change = atoi(temp);
+}
+
+// TODO: Further refactoring needed
 void read_page(tape_t *tape) {
     FILE *file = open_file(tape->filename, "r");
     int page_index = tape->page_index;
@@ -57,23 +76,8 @@ void read_page(tape_t *tape) {
         buffer[i] = '\0';
     }
     if (fread(buffer, sizeof(char), records_size, file)) {
-        for (int i = 0; i < RECORD_COUNT_PER_PAGE; i++) {
-            int record_offset = i * record_size;
-            // Situation: there are records to read, but it will not fill the whole page,
-            // so we initalize as they do not exist
-            if (buffer[record_offset] == '\0') {
-                initialize_record(tape->page->records[i]);
-                continue;
-            }
-            char temp[INT_WIDTH + NULL_CHARACTER_SIZE];
-            temp[INT_WIDTH] = '\0';
-            memcpy(temp, buffer + record_offset, INT_WIDTH);
-            tape->page->records[i]->mass = atoi(temp);
-            memcpy(temp, buffer + record_offset + INT_WIDTH, INT_WIDTH);
-            tape->page->records[i]->specific_heat_capacity = atoi(temp);
-            memcpy(temp, buffer + record_offset + 2 * INT_WIDTH, INT_WIDTH);
-            tape->page->records[i]->temperature_change = atoi(temp);
-        }
+        for (int i = 0; i < RECORD_COUNT_PER_PAGE; i++)
+            read_record(tape, record_size, buffer, i);
     } else {
         // Reached EOF, mark whole page as non existing
         for (int i = 0; i < RECORD_COUNT_PER_PAGE; i++) {
@@ -88,7 +92,7 @@ int is_at_end(tape_t *tape) {
     return !(record_exists(tape->page->records[tape->page->record_index]));
 }
 
-void add_record_to_page(tape_t *tape, record_t *record) {
+void add_record(tape_t *tape, record_t *record) {
     if (record_exists(tape->page->records[tape->page->record_index])) {
         (tape->page->record_index)++;
     }
@@ -116,8 +120,13 @@ void move_to_start(tape_t *tape) {
     read_page(tape);
 }
 
-record_t *get_next_record_from_page(tape_t *tape) {
+record_t *get_next(tape_t *tape) {
     tape->page->record_index++;
     handle_full_page(tape, 0, 1);
+    return tape->page->records[tape->page->record_index];
+}
+
+
+record_t *get_current(tape_t *tape) {
     return tape->page->records[tape->page->record_index];
 }

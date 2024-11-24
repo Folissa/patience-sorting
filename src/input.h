@@ -1,5 +1,8 @@
 #pragma once
 
+#ifndef INPUT_H
+#define INPUT_H
+
 #include <stdio.h>
 
 #include "constants.h"
@@ -31,3 +34,5 @@ void print_menu();
 
 // Prompt user for the input method of the test records, and load them into tape.
 void load_records(int *records_count, tape_t tape);
+
+#endif // INPUT_H

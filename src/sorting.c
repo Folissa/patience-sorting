@@ -12,11 +12,10 @@ void distribute(tape_t *tape_1, tape_t *tape_2, tape_t *tape_3) {
     // Clear the tape files
     clear_file(tape_2->filename);
     clear_file(tape_3->filename);
-    // TODO: Potential memory leak?
     record_t *last_record = create_record();
+    record_t *current_record = get_current(tape_1);
     int toggle_tape = 1;
     while (!is_at_end(tape_1)) {
-        record_t *current_record = get_next_record_from_page(tape_1);
         if (!record_exists(current_record))
             break;
         if (record_exists(last_record) && 
@@ -24,11 +23,12 @@ void distribute(tape_t *tape_1, tape_t *tape_2, tape_t *tape_3) {
             toggle_tape = !toggle_tape;
         }
         if (toggle_tape) {
-            add_record_to_page(tape_2, current_record);
+            add_record(tape_2, current_record);
         } else {
-            add_record_to_page(tape_3, current_record);
+            add_record(tape_3, current_record);
         }
         copy_record(current_record, last_record);
+        current_record = get_next(tape_1);
     }
     // Dump all the records to files
     write_page(tape_2);

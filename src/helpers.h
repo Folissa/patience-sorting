@@ -1,5 +1,8 @@
 #pragma once
 
+#ifndef HELPERS_H
+#define HELPERS_H
+
 #include <stdlib.h>
 #include <math.h>
 
@@ -12,3 +15,5 @@ record_t *randomize_record();
 
 // Save randomized records to the main tape.
 void randomize_records(int records_count, tape_t tape);
+
+#endif // HELPERS_H

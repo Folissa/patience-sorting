@@ -1,5 +1,8 @@
 #pragma once
 
+#ifndef SORTING_H
+#define SORTING_H
+
 #include "constants.h"
 #include "record.h"
 #include "tape.h"
@@ -12,3 +15,5 @@ void distribute(tape_t *tape_1, tape_t *tape_2, tape_t *tape_3);
 
 // Sort tape.
 void sort(tape_t *tape_1);
+
+#endif // SORTING_H

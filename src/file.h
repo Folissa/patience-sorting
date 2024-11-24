@@ -1,5 +1,8 @@
 #pragma once
 
+#ifndef FILE_H
+#define FILE_H
+
 #include <stdio.h>
 
 //  Create new file.
@@ -25,3 +28,5 @@ void delete_file(char *filename);
 
 // Copy contents of source file to the destination file.
 void copy_file(char *source_filename, char *destination_filename);
+
+#endif // FILE_H

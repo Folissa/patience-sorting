@@ -1,5 +1,8 @@
 #pragma once
 
+#ifndef RECORD_H
+#define RECORD_H
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -31,9 +34,6 @@ void append_record(FILE *file, record_t *record);
 // Write record to a file at specific index.
 void write_record(FILE *file, record_t *record, int record_index);
 
-// Read record from a file at specific index.
-void read_record(FILE *file, record_t *record, int record_index);
-
 // Count records in the file.
 int count_records(char *filename);
 
@@ -41,3 +41,5 @@ int count_records(char *filename);
 int calculate_sensible_heat(record_t record);
 
 void copy_record(record_t *source, record_t *destination);
+
+#endif // RECORD_H
