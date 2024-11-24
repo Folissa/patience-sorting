@@ -91,6 +91,8 @@ void read_page(tape_t *tape) {
     if (fread(buffer, sizeof(char), records_size, file)) {
         for (int i = 0; i < RECORD_COUNT_PER_PAGE; i++)
             read_record(tape, buffer, i);
+        (tape->reads)++;
+
     } else {
         // Reached EOF, mark whole page as non existing
         for (int i = 0; i < RECORD_COUNT_PER_PAGE; i++) {
@@ -98,7 +100,6 @@ void read_page(tape_t *tape) {
         }
     }
     close_file(file);
-    (tape->reads)++;
 }
 
 int is_at_end(tape_t *tape) {
