@@ -42,6 +42,13 @@ int main() {
 
     load_records(&records_count, *tape_1);
 
+    record_t *record = create_record();
+    record->mass = 1111;
+    record->specific_heat_capacity = 2222;
+    record->temperature_change = 3333;
+    print_debug(*record);
+    destroy_record(record);
+
     sort(tape_1);
 
     destroy_tape(tape_1);

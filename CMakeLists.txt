@@ -6,7 +6,7 @@ set(CMAKE_BUILD_TYPE Debug)
 set(CMAKE_C_FLAGS_DEBUG  "-g")
 
 file(GLOB source_files CONFIGURE_DEPENDS "src/*.h" "src/*.c")
-set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} -lm")
+set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} -lm -DDEBUG")
 
 add_executable(sbd ${source_files})
 

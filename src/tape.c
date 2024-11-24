@@ -139,7 +139,6 @@ record_t *get_next(tape_t *tape) {
     return tape->page->records[tape->page->record_index];
 }
 
-
 record_t *get_current(tape_t *tape) {
     return tape->page->records[tape->page->record_index];
 }

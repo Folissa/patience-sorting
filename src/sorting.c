@@ -5,9 +5,9 @@ void handle_when_finished(tape_t *source, tape_t *destination) {
         return;
     record_t *last_record = create_record();
     record_t *record = create_record();
-        copy_record(get_current(source), last_record);
-        copy_record(get_current(source), record);
-    while(!is_at_end(source) && calculate_sensible_heat(*record) >= calculate_sensible_heat(*last_record)) {
+    copy_record(get_current(source), last_record);
+    copy_record(get_current(source), record);
+    while (!is_at_end(source) && calculate_sensible_heat(*record) >= calculate_sensible_heat(*last_record)) {
         copy_record(get_current(source), last_record);
         add_record(destination, record);
         copy_record(get_next(source), record);

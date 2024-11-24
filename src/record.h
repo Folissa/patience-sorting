@@ -35,7 +35,7 @@ void append_record(FILE *file, record_t *record);
 int count_records(char *filename);
 
 // Calculate sennsible heat.
-int calculate_sensible_heat(record_t record);
+long long calculate_sensible_heat(record_t record);
 
 void copy_record(record_t *source, record_t *destination);
 
