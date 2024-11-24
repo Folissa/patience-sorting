@@ -7,7 +7,7 @@ int handle_when_finished(tape_t *source, tape_t *destination, int append_rest) {
     record_t *last_record = get_current(source);
     while (!is_at_end(source) && (calculate_sensible_heat(*get_current(source)) >= calculate_sensible_heat(*last_record) || append_rest)){
         single_serie = single_serie && (calculate_sensible_heat(*get_current(source)) >= calculate_sensible_heat(*last_record));
-        last_record = get_current(source);
+        copy_record(get_current(source), last_record);
         add_record(destination, get_next(source));    
     }
     return single_serie;
@@ -22,26 +22,19 @@ int merge(tape_t *tape_1, tape_t *tape_2, tape_t *tape_3) {
     record_t *last_record_tape_2 = create_record();
     record_t *last_record_tape_3 = create_record();
     while (!is_at_end(tape_2) && !is_at_end(tape_3)) {
-        int tape_2_finished = 0;
-        int tape_3_finished = 0;
-        if (!record_exists(last_record_tape_2)) {
-            tape_2_finished = 1;
+        if (!record_exists(last_record_tape_2) || !record_exists(last_record_tape_3)) {
             break;
         }
-        if (!record_exists(last_record_tape_3)) {
-            tape_3_finished = 1;
-            break;
-        }
-        tape_2_finished = calculate_sensible_heat(*get_current(tape_2)) < calculate_sensible_heat(*last_record_tape_2);
-        tape_3_finished = calculate_sensible_heat(*get_current(tape_3)) < calculate_sensible_heat(*last_record_tape_3);
+        int tape_2_finished = calculate_sensible_heat(*get_current(tape_2)) < calculate_sensible_heat(*last_record_tape_2);
+        int tape_3_finished = calculate_sensible_heat(*get_current(tape_3)) < calculate_sensible_heat(*last_record_tape_3);
         if (tape_2_finished || tape_3_finished) {
             handle_when_finished(tape_1, tape_2_finished ? tape_3 : tape_2, 0);
             initialize_record(last_record_tape_2);
             initialize_record(last_record_tape_3);
             continue;
         }
-        last_record_tape_2 = get_current(tape_2);
-        last_record_tape_3 = get_current(tape_3);\
+        copy_record(get_current(tape_2), last_record_tape_2);
+        copy_record(get_current(tape_3), last_record_tape_3);
         record_t *record = calculate_sensible_heat(*get_current(tape_2)) < calculate_sensible_heat(*get_current(tape_3)) ? get_next(tape_2) : get_next(tape_3);
         if (calculate_sensible_heat(*record) < calculate_sensible_heat(*last_record))
             sorted = 0;
