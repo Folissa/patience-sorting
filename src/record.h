@@ -31,9 +31,6 @@ void destroy_record(record_t *record);
 // Append record to a file.
 void append_record(FILE *file, record_t *record);
 
-// Write record to a file at specific index.
-void write_record(FILE *file, record_t *record, int record_index);
-
 // Count records in the file.
 int count_records(char *filename);
 

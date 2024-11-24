@@ -30,6 +30,19 @@ void handle_full_page(tape_t *tape, int write, int read) {
     }
 }
 
+void write_record(FILE *file, record_t *record, int record_index) {
+    int record_size = PARAMETERS_COUNT * INT_WIDTH;
+    long int record_offset = record_index * record_size;
+    if (fseek(file, record_offset, SEEK_SET) != 0) {
+        perror("Error seeking in file");
+        return;
+    }
+    fprintf(file, "%0*d%0*d%0*d",
+        INT_WIDTH, record->mass,
+        INT_WIDTH, record->specific_heat_capacity,
+        INT_WIDTH, record->temperature_change);
+}
+
 void write_page(tape_t *tape) {
     FILE *file = open_file(tape->filename, "r+");
     for (int i = 0; i < RECORD_COUNT_PER_PAGE; i++) {
@@ -43,7 +56,8 @@ void write_page(tape_t *tape) {
     (tape->writes)++;
 }
 
-void read_record(tape_t *tape, int record_size, char *buffer, int record_index) {
+void read_record(tape_t *tape, char *buffer, int record_index) {
+    int record_size = PARAMETERS_COUNT * INT_WIDTH;
     int record_offset = record_index * record_size;
     if (buffer[record_offset] == '\0') {
         // Situation: there are records to read, but it will not fill the whole page,
@@ -61,7 +75,6 @@ void read_record(tape_t *tape, int record_size, char *buffer, int record_index) 
     tape->page->records[record_index]->temperature_change = atoi(temp);
 }
 
-// TODO: Further refactoring needed
 void read_page(tape_t *tape) {
     FILE *file = open_file(tape->filename, "r");
     int page_index = tape->page_index;
@@ -77,7 +90,7 @@ void read_page(tape_t *tape) {
     }
     if (fread(buffer, sizeof(char), records_size, file)) {
         for (int i = 0; i < RECORD_COUNT_PER_PAGE; i++)
-            read_record(tape, record_size, buffer, i);
+            read_record(tape, buffer, i);
     } else {
         // Reached EOF, mark whole page as non existing
         for (int i = 0; i < RECORD_COUNT_PER_PAGE; i++) {

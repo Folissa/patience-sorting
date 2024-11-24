@@ -29,19 +29,6 @@ void append_record(FILE *file, record_t *record) {
         INT_WIDTH, record->temperature_change);
 }
 
-void write_record(FILE *file, record_t *record, int record_index) {
-    int record_size = PARAMETERS_COUNT * INT_WIDTH;
-    long int offset = record_index * record_size;
-    if (fseek(file, offset, SEEK_SET) != 0) {
-        perror("Error seeking in file");
-        return;
-    }
-    fprintf(file, "%0*d%0*d%0*d",
-        INT_WIDTH, record->mass,
-        INT_WIDTH, record->specific_heat_capacity,
-        INT_WIDTH, record->temperature_change);
-}
-
 int count_records(char *filename) {
     FILE *file = open_file(filename, "r");
     int records_count = 0;

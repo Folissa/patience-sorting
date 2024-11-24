@@ -31,8 +31,14 @@ void destroy_tape(tape_t *tape);
 // Handle situation when page is full.
 void handle_full_page(tape_t *tape, int write, int read);
 
+// Write record to a file at specific index.
+void write_record(FILE *file, record_t *record, int record_index);
+
 // Write page to a file. Increments number of saves.
 void write_page(tape_t *tape);
+
+// Read record from a buffer at specific index.
+void read_record(tape_t *tape, char *buffer, int record_index);
 
 // Load page from a file. Increments number of loads.
 void read_page(tape_t *tape);
@@ -53,8 +59,5 @@ void reset_tape(tape_t *tape);
 void reset_page(tape_t *tape);
 
 void move_to_start(tape_t *tape);
-
-// Read record from a file at specific index.
-void read_record(tape_t *tape, int record_size, char *buffer, int record_index);
 
 #endif // TAPE_H
