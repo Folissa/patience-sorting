@@ -1,9 +1,12 @@
+#pragma once
+
+#include <math.h>
 #include <stdlib.h>
 #include <time.h>
 
-#include "tape.h"
 #include "input.h"
 #include "sorting.h"
+#include "tape.h"
 
 // TODO: Sorting by heat, tapes should be implemented using files [DONE]
 // TODO: Write and read one record to and from file [DONE]
@@ -18,24 +21,27 @@
 
 int main() {
     srand(time(NULL));
-    
+
     int records_count = 0;
+    int series = 0;
 
     init_file(TAPE_1_FILENAME);
     init_file(TAPE_2_FILENAME);
     init_file(TAPE_3_FILENAME);
 
     tape_t *tape_1 = create_tape(TAPE_1_FILENAME);
-    load_records(&records_count, *tape_1);
-    #ifdef DEBUG
+    load_records(&records_count, &series, *tape_1);
+#ifdef DEBUG
     printf("___________TAPE1_BEFORE_SORTING___________\n");
     print_tape(tape_1);
-    #endif // DEBUG
+#endif // DEBUG
     sort(tape_1);
-    #ifdef DEBUG
+    // printf("Theoretical phases: %22d\n", (int)ceil(log2(series)));
+    printf("Series: %34d\n", series);
+#ifdef DEBUG
     printf("___________TAPE1_AFTER__SORTING___________\n");
     print_tape(tape_1);
-    #endif // DEBUG
+#endif // DEBUG
     destroy_tape(tape_1);
     return 0;
 }

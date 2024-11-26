@@ -27,12 +27,12 @@ void load_records_from_file(char *filename, int *record_count, tape_t tape);
 void load_records_from_keyboard(int *records_count, tape_t tape);
 
 //  Load records generated randomly to the main tape.
-record_t *load_records_generated_randomly(int *records_count, tape_t tape);
+record_t *load_records_generated_randomly(int *records_count, int *series, tape_t tape);
 
 // Prints a menu with input options to choose from.
 void print_menu();
 
 // Prompt user for the input method of the test records, and load them into tape.
-void load_records(int *records_count, tape_t tape);
+void load_records(int *records_count, int *series, tape_t tape);
 
 #endif // INPUT_H

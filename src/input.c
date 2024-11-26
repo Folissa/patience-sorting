@@ -48,11 +48,11 @@ void load_records_from_keyboard(int *records_count, tape_t tape) {
     input_records(*records_count, tape);
 }
 
-record_t *load_records_generated_randomly(int *records_count, tape_t tape) {
+record_t *load_records_generated_randomly(int *records_count, int *series, tape_t tape) {
     printf("Input number of records to generate:\n");
     print_prompt();
     scanf("%d", records_count);
-    randomize_records(*records_count, tape);
+    randomize_records(*records_count, series, tape);
 }
 
 void print_menu() {
@@ -62,7 +62,7 @@ void print_menu() {
     printf("4. Exit\n");
 }
 
-void load_records(int *records_count, tape_t tape) {
+void load_records(int *records_count, int *series, tape_t tape) {
     int exit = 0;
     int choice;
     while (!exit) {
@@ -79,7 +79,7 @@ void load_records(int *records_count, tape_t tape) {
             exit = 1;
             break;
         case 3:
-            load_records_generated_randomly(records_count, tape);
+            load_records_generated_randomly(records_count, series, tape);
             exit = 1;
             break;
         case 4:

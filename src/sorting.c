@@ -151,19 +151,20 @@ void sort(tape_t *tape_1) {
         phases++;
         distribute(tape_1, tape_2, tape_3);
         sorted = merge(tape_1, tape_2, tape_3);
-        #ifdef DEBUG
+#ifdef DEBUG
         if (!sorted) {
-            printf("______________TAPE1_PHASE_%02d______________\n", phases);
+            printf("___________TAPE1_AFTER_PHASE_%02d____________\n", phases);
             print_tape(tape_1);
         }
-        #endif // DEBUG
+#endif // DEBUG
     }
-    #ifdef DEBUG
+    int writes = tape_1->writes + tape_2->writes + tape_3->writes;
+    int reads = tape_1->reads + tape_2->reads + tape_3->reads;
     printf("------------------STATUS------------------\n");
+    printf("Number of writes: %24d\n", writes);
+    printf("Number of reads: %25d\n", reads);
+    printf("Number of writes + reads: %16d\n", writes + reads);
     printf("Number of phases: %24d\n", phases);
-    printf("Number of writes: %24d\n", tape_1->writes + tape_2->writes + tape_3->writes);
-    printf("Number of reads: %25d\n", tape_1->reads + tape_2->reads + tape_3->reads);
-    #endif // DEBUG
     destroy_tape(tape_2);
     destroy_tape(tape_3);
 }
